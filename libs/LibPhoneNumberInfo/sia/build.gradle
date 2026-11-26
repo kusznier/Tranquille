@@ -1,0 +1,8 @@
+dependencies {
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    //noinspection GradleDependency: 3.12.* is the latest version compatible with Android <5
+    implementation 'com.squareup.okhttp3:okhttp:3.12.13'
+    implementation 'commons-codec:commons-codec:1.15' // beware: a version included in Android is used instead
+    // TODO: fix
+    compileOnly 'org.json:json:20210307'
+}
