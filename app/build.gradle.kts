@@ -91,7 +91,7 @@ dependencies {
     implementation(libs.slf4j)
     implementation(libs.conscrypt)
     implementation(libs.okhttp)
-    implementation(libs.lib.phone.number.info)
+    implementation(project(":sia"))
     implementation(libs.commons.csv)
     implementation(libs.sqldelight.driver)
     implementation(libs.sqldelight.coroutines)

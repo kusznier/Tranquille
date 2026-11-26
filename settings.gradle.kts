@@ -22,4 +22,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tranquille"
 include(":app")
+
+// LibPhoneNumberInfo, vendored unmodified via git subtree (see libs/README.md).
+include(":sia")
+project(":sia").projectDir = file("libs/LibPhoneNumberInfo/sia")
  

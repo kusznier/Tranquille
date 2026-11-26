@@ -11,3 +11,12 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
     }
 }
+
+// The vendored library keeps its original build file, which only declares
+// dependencies; apply what its own (Gradle 6) root project used to apply.
+project(":sia") {
+    apply(plugin = "java-library")
+    tasks.withType<JavaCompile>().configureEach {
+        options.release.set(8)
+    }
+}
