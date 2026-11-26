@@ -317,8 +317,8 @@ class DenylistImporterExporter {
                 val denylistItems: MutableList<DenylistItem> = ArrayList()
                 val delimiter = ": "
 
-                var line: String
-                while ((br.readLine().also { line = it }) != null) {
+                while (true) {
+                    val line = br.readLine() ?: break
                     val delimiterIndex = line.indexOf(delimiter)
                     if (delimiterIndex == -1) {
                         LOG.warn("readNoPhoneSpamBackup() incorrect format: no delimiter")
