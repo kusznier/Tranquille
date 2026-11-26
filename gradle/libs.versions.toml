@@ -12,7 +12,6 @@ slf4j = "2.0.12"
 logback = "3.0.0"
 conscrypt = "2.5.2"
 okhttp = "4.12.0"
-lib-phone-number-info = "c77bdd2b69"
 commons-csv = "1.10.0"
 recyclerview = "1.4.0"
 recyclerview-selection = "1.2.0"
@@ -22,7 +21,6 @@ preference = "1.2.1"
 work-runtime = "2.10.1"
 eventbus = "3.3.1"
 sqldelight = "2.1.0"
-sqlite = "3.45.0"
 sqlite-android = "2.5.1"
 
 [libraries]
@@ -49,14 +47,12 @@ logback = { group = "com.github.tony19", name = "logback-android", version.ref =
 conscrypt = { group = "org.conscrypt", name = "conscrypt-android", version.ref = "conscrypt" }
 commons-csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons-csv" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
-lib-phone-number-info = { group = "com.gitlab.xynngh", name = "LibPhoneNumberInfo", version.ref = "lib-phone-number-info" }
 
 sqldelight-driver = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }
 sqldelight-dialects-sql = { group = "app.cash.sqldelight", name = "sqlite-3-38-dialect", version.ref = "sqldelight" }
 sqldelight-sqlite-driver = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqldelight" }
 
-sqlite-android = { group = "com.github.requery", name = "sqlite-android", version.ref = "sqlite" }
 sqlite-framework = { group = "androidx.sqlite", name = "sqlite-framework", version.ref = "sqlite-android" }
 sqlite-ktx = { group = "androidx.sqlite", name = "sqlite-ktx", version.ref = "sqlite-android" }
 
@@ -69,4 +65,4 @@ jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "k
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 [bundles]
-sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]
+sqlite = ["sqlite-framework", "sqlite-ktx"]
