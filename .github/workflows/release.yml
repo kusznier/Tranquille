@@ -1,10 +1,13 @@
 name: Release
 
-# Push a tag "v<versionName>" (e.g. v0.1.0) to build a signed APK and publish
-# it as a GitHub release. Signing uses repository secrets only.
+# Builds a signed APK and publishes it as GitHub release "v<versionName>".
+# Start it either by pushing a tag "v<versionName>" (e.g. v0.1.0), or from the
+# Actions tab with "Run workflow" on a branch (the tag is then created at that
+# commit). Signing uses repository secrets only.
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,13 +19,21 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Check tag matches versionName
+      - name: Determine release tag
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           version=$(sed -n 's/^ *versionName = "\(.*\)"$/\1/p' app/build.gradle.kts)
-          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+          tag="v$version"
+          if [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$tag" != "$GITHUB_REF_NAME" ]; then
             echo "Tag $GITHUB_REF_NAME does not match versionName $version" >&2
             exit 1
           fi
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "Release $tag already exists; bump versionName/versionCode first" >&2
+            exit 1
+          fi
+          echo "TAG=$tag" >> "$GITHUB_ENV"
 
       - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
@@ -73,8 +84,8 @@ jobs:
             exit 1
           fi
           mkdir -p dist
-          cp "$apk" "dist/tranquille-$GITHUB_REF_NAME.apk"
-          (cd dist && sha256sum "tranquille-$GITHUB_REF_NAME.apk" > "tranquille-$GITHUB_REF_NAME.apk.sha256")
+          cp "$apk" "dist/tranquille-$TAG.apk"
+          (cd dist && sha256sum "tranquille-$TAG.apk" > "tranquille-$TAG.apk.sha256")
 
       - name: Publish GitHub release
         env:
@@ -86,6 +97,7 @@ jobs:
             echo
             echo "Signing certificate SHA-256: \`$cert\`"
           } > "$RUNNER_TEMP/notes.md"
-          gh release create "$GITHUB_REF_NAME" dist/* \
-            --title "Tranquille $GITHUB_REF_NAME" \
+          gh release create "$TAG" dist/* \
+            --target "$GITHUB_SHA" \
+            --title "Tranquille $TAG" \
             --notes-file "$RUNNER_TEMP/notes.md"
