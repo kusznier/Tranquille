@@ -208,7 +208,8 @@ public class NotificationHelper {
     }
 
     private static String getTitleExtra(Context context, NumberInfo numberInfo) {
-        return NumberInfoUtils.getShortDescription(context, numberInfo);
+        return concat(NumberInfoUtils.getShortDescription(context, numberInfo), " · ",
+                NumberInfoUtils.getShortRatings(context, numberInfo));
     }
 
     private static String getInfoDescription(Context context, NumberInfo numberInfo) {
@@ -248,7 +249,7 @@ public class NotificationHelper {
         if (numberInfo.communityDatabaseItem != null) {
             CommunityDatabaseItem communityItem = numberInfo.communityDatabaseItem;
 
-            if (communityItem.hasRatings()) {
+            if (NumberInfoUtils.hasAnyRatings(communityItem)) {
                 return context.getString(R.string.notification_incoming_call_text_description,
                         communityItem.getNegativeRatingsCount(), communityItem.getPositiveRatingsCount(),
                         communityItem.getNeutralRatingsCount());

@@ -10,7 +10,7 @@ import dummydomain.yetanothercallblocker.sia.model.database.CommunityDatabaseIte
 public class ReviewsSummaryHelper {
 
     public static void populateSummary(View reviewsSummary, CommunityDatabaseItem item) {
-        boolean visible = item != null && item.hasRatings();
+        boolean visible = NumberInfoUtils.hasAnyRatings(item);
 
         reviewsSummary.setVisibility(visible ? View.VISIBLE : View.GONE);
         if (visible) {

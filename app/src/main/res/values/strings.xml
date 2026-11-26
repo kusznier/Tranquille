@@ -22,6 +22,7 @@
 
     <string name="notification_blocked_call">Blocked call</string>
 
+    <string name="notification_ratings_short" translatable="false">👎 %1$d · 👍 %2$d</string>
     <string name="notification_incoming_call_text_description">Negative: %1$d, positive: %2$d, neutral: %3$d</string>
 
     <string name="notification_background_operation">Performing background operation…</string>
