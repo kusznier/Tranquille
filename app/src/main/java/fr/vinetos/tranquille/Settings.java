@@ -117,8 +117,14 @@ public class Settings extends GenericSettings {
         return getBoolean(PREF_INCOMING_CALL_NOTIFICATIONS, true);
     }
 
+    /**
+     * Whether the app needs the notification permission (Android 13+):
+     * true when incoming-call or blocked-call notifications are enabled.
+     * The former "useNotifications" preference was never set anywhere, so the
+     * permission was never requested.
+     */
     public boolean getUseNotification() {
-        return getBoolean(PREF_USE_NOTIFICATIONS);
+        return getIncomingCallNotifications() || getNotificationsForBlockedCalls();
     }
 
     public void setIncomingCallNotifications(boolean show) {
