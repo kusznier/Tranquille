@@ -54,6 +54,7 @@ lib-phone-number-info = { group = "com.gitlab.xynngh", name = "LibPhoneNumberInf
 sqldelight-driver = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }
 sqldelight-dialects-sql = { group = "app.cash.sqldelight", name = "sqlite-3-38-dialect", version.ref = "sqldelight" }
+sqldelight-sqlite-driver = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqldelight" }
 
 sqlite-android = { group = "com.github.requery", name = "sqlite-android", version.ref = "sqlite" }
 sqlite-framework = { group = "androidx.sqlite", name = "sqlite-framework", version.ref = "sqlite-android" }

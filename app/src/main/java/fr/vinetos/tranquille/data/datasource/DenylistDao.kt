@@ -64,8 +64,9 @@ class DenylistDao(
 
     suspend fun insert(denylistItem: DenylistItem) {
         withContext(Dispatchers.IO) {
-            queries.updateItem(
-                denylistItem.id,
+            // Let SQLite assign the id: new items carry id = -1 and imported items
+            // carry ids from another installation, which must not overwrite rows.
+            queries.insertItem(
                 denylistItem.name,
                 denylistItem.pattern,
                 denylistItem.creationDate,
