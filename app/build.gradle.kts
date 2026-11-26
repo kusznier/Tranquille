@@ -23,8 +23,23 @@ android {
             }
         }
     }
+    // Release signing is configured only when the keystore is provided through
+    // environment variables (see .github/workflows/release.yml). Without them
+    // the release build stays unsigned, as before.
+    val releaseKeystore: String? = System.getenv("TRANQUILLE_KEYSTORE_FILE")
+    signingConfigs {
+        if (!releaseKeystore.isNullOrEmpty()) {
+            create("release") {
+                storeFile = file(releaseKeystore)
+                storePassword = System.getenv("TRANQUILLE_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("TRANQUILLE_KEY_ALIAS")
+                keyPassword = System.getenv("TRANQUILLE_KEY_PASSWORD")
+            }
+        }
+    }
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
