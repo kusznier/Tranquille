@@ -97,7 +97,7 @@ public class RootSettingsFragment extends BaseSettingsFragment {
         setPrefChangeListener(Settings.PREF_INCOMING_CALL_NOTIFICATIONS, (pref, newValue) -> {
             if (Boolean.TRUE.equals(newValue)) {
                 PermissionHelper.checkPermissions(requireContext(), this,
-                        true, false, false, false);
+                        true, false, false, true);
             }
             return true;
         });
