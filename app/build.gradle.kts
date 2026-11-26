@@ -93,6 +93,7 @@ dependencies {
     runtimeOnly(libs.logback)
 
     testImplementation(libs.junit)
+    testImplementation(libs.sqldelight.sqlite.driver)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

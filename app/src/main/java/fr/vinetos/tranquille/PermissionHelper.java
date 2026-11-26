@@ -144,7 +144,7 @@ public class PermissionHelper {
                         contactsDenied = true;
                     }
                     if (NOTIFICATIONS_PERMISSIONS.contains(permission)) {
-                        contactsDenied = true;
+                        notificationDenied = true;
                     }
                 }
             }
