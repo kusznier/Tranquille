@@ -1,7 +1,6 @@
 package fr.vinetos.tranquille.data
 
 import android.content.Context
-import android.os.Build
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
@@ -20,7 +19,6 @@ import dummydomain.yetanothercallblocker.sia.network.OkHttpClientFactory
 import dummydomain.yetanothercallblocker.sia.network.WebService
 import dummydomain.yetanothercallblocker.sia.network.WebService.DefaultWSParameterProvider
 import dummydomain.yetanothercallblocker.sia.utils.Utils
-import fr.vinetos.tranquille.BuildConfig
 import fr.vinetos.tranquille.NotificationService
 import fr.vinetos.tranquille.PhoneStateHandler
 import fr.vinetos.tranquille.Settings
@@ -33,7 +31,6 @@ import fr.vinetos.tranquille.domain.service.DenylistService
 import fr.vinetos.tranquille.utils.DbFilteringUtils
 import fr.vinetos.tranquille.utils.DeferredInit
 import fr.vinetos.tranquille.utils.SystemUtils
-import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.Volatile
@@ -90,12 +87,8 @@ object Config {
             schema = Schema,
             context = context,
             name = "tranquille.db",
-            factory = if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // Support database inspector in Android Studio
-                FrameworkSQLiteOpenHelperFactory()
-            } else {
-                RequerySQLiteOpenHelperFactory()
-            }
+            // Platform SQLite (previously the requery build, which is only published on JitPack)
+            factory = FrameworkSQLiteOpenHelperFactory()
         )
         val denylistDao = DenylistDao(
             invoke(
