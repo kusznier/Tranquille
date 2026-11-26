@@ -217,8 +217,9 @@ class EditDenylistItemActivity : AppCompatActivity() {
                 denylistService.update(updatedItem)
             }
         } else {
-            if (name.isEmpty() || pattern.isNullOrEmpty()) {
-                LOG.info("save() not creating a new item because fields are empty")
+            // The name is optional; only the pattern is required.
+            if (pattern.isNullOrEmpty()) {
+                LOG.info("save() not creating a new item because the pattern is empty")
                 return
             }
 
