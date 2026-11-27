@@ -1,6 +1,5 @@
 package fr.vinetos.tranquille.data.datasource
 
-import fr.vinetos.tranquille.DenylistDataSource
 import fr.vinetos.tranquille.data.Database
 import fr.vinetos.tranquille.data.DenylistItem
 import kotlinx.coroutines.Dispatchers
@@ -10,10 +9,6 @@ import java.util.Date
 class DenylistDao(
     db: Database
 ) {
-
-    fun dataSourceFactory(): DenylistDataSource.Factory {
-        return DenylistDataSource.Factory(this)
-    }
 
     private val queries = db.denylistItemQueries;
     suspend fun findById(id: Long): DenylistItem? {

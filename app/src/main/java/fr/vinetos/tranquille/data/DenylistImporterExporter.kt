@@ -1,6 +1,5 @@
 package fr.vinetos.tranquille.data
 
-import androidx.core.util.ObjectsCompat
 import fr.vinetos.tranquille.data.datasource.DenylistDao
 import fr.vinetos.tranquille.domain.service.DenylistService
 import kotlinx.coroutines.runBlocking
@@ -43,71 +42,96 @@ class DenylistImporterExporter {
         return true
     }
 
+    /** Result of an import: how many items were added, updated or already present. */
+    data class ImportResult(val added: Int, val updated: Int, val skipped: Int)
+
+    /**
+     * Imports a YACB or NoPhoneSpam backup. Items are matched by pattern, not by id:
+     * ids come from another installation and say nothing about this database. An
+     * existing item only gets a missing name, a higher call count or a later last
+     * call date from the backup; anything else is skipped, so importing the same
+     * file twice adds nothing.
+     *
+     * @return the counts, or null if the file could not be read
+     */
     fun importDenylist(
         denylistDao: DenylistDao,
         denylistService: DenylistService,
         fileDescriptor: FileDescriptor?
-    ): Boolean {
-        var items: List<DenylistItem>? = null
+    ): ImportResult? {
+        return FileInputStream(fileDescriptor).use { importDenylist(denylistDao, denylistService, it) }
+    }
 
-        try {
-            FileInputStream(fileDescriptor).use { inputStream ->
-                items = read(inputStream)
-            }
+    fun importDenylist(
+        denylistDao: DenylistDao,
+        denylistService: DenylistService,
+        inputStream: InputStream
+    ): ImportResult? {
+        val items: List<DenylistItem>? = try {
+            read(inputStream)
         } catch (e: IOException) {
             LOG.warn("importDenylist()", e)
+            null
         }
 
-        if (items == null) {
-            return false
-        }
+        return items?.let { importItems(denylistDao, denylistService, it) }
+    }
 
-        for (item in items!!) {
+    fun importItems(
+        denylistDao: DenylistDao,
+        denylistService: DenylistService,
+        items: List<DenylistItem>
+    ): ImportResult {
+        var added = 0
+        var updated = 0
+        var skipped = 0
+
+        for (item in items) {
             val existingItem: DenylistItem? = runBlocking {
-                denylistDao.findById(item.id)
-            } ?: runBlocking {
                 denylistDao.findByPattern(item.pattern)
             }
 
-            val isNew = existingItem == null ||
-                !ObjectsCompat.equals(item.pattern, existingItem.pattern)
-
-            if (isNew) {
+            if (existingItem == null) {
                 denylistService.insert(item)
-            } else {
-                var changed = false
-                val updatedItem = existingItem!!.copy(
-                    name = if (existingItem.name.isNullOrEmpty() && !item.name.isNullOrEmpty()) {
-                        changed = true
-                        item.name
-                    } else {
-                        existingItem.name
-                    },
-                    numberOfCalls = if (existingItem.numberOfCalls < item.numberOfCalls) {
-                        changed = true
-                        item.numberOfCalls
-                    } else {
-                        existingItem.numberOfCalls
-                    },
-                    lastCallDate = if (item.lastCallDate != null && (
-                        existingItem.lastCallDate == null ||
-                            existingItem.lastCallDate.before(item.lastCallDate)
-                        )
-                    ) {
-                        changed = true
-                        item.lastCallDate
-                    } else {
-                        existingItem.lastCallDate
-                    }
-                )
+                added++
+                continue
+            }
 
-                if (changed) {
-                    denylistService.update(updatedItem)
+            var changed = false
+            val updatedItem = existingItem.copy(
+                name = if (existingItem.name.isNullOrEmpty() && !item.name.isNullOrEmpty()) {
+                    changed = true
+                    item.name
+                } else {
+                    existingItem.name
+                },
+                numberOfCalls = if (existingItem.numberOfCalls < item.numberOfCalls) {
+                    changed = true
+                    item.numberOfCalls
+                } else {
+                    existingItem.numberOfCalls
+                },
+                lastCallDate = if (item.lastCallDate != null && (
+                    existingItem.lastCallDate == null ||
+                        existingItem.lastCallDate.before(item.lastCallDate)
+                    )
+                ) {
+                    changed = true
+                    item.lastCallDate
+                } else {
+                    existingItem.lastCallDate
                 }
+            )
+
+            if (changed) {
+                denylistService.update(updatedItem)
+                updated++
+            } else {
+                skipped++
             }
         }
 
-        return true
+        return ImportResult(added, updated, skipped)
     }
 
     @Throws(IOException::class)

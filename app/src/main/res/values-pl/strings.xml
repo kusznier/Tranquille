@@ -233,4 +233,23 @@
     <string name="settings_screen_db_filtering">Filtrowanie bazy danych</string>
     <string name="settings_category_database">Baza danych</string>
     <string name="check_for_db_updates">Sprawdź aktualizacje</string>
+    <string name="denylist_search_hint">Szukaj nazwy lub numeru</string>
+    <string name="denylist_clear_search">Wyczyść wyszukiwanie</string>
+    <string name="denylist_empty">Czarna lista jest pusta. Dodaj numer przyciskiem poniżej albo zaimportuj kopię zapasową.</string>
+    <string name="denylist_no_matches">Żaden numer nie pasuje do wyszukiwania.</string>
+    <string name="denylist_undo">Cofnij</string>
+    <plurals name="denylist_deleted_count">
+        <item quantity="one">Usunięto %d numer</item>
+        <item quantity="few">Usunięto %d numery</item>
+        <item quantity="many">Usunięto %d numerów</item>
+        <item quantity="other">Usunięto %d numeru</item>
+    </plurals>
+    <string name="denylist_import_result">Import zakończony: dodano %1$d, zaktualizowano %2$d, już na liście %3$d</string>
+    <string name="denylist_import_failed">Nie udało się odczytać pliku. Wybierz kopię CSV z Yet Another Call Blocker lub Tranquille albo kopię z NoPhoneSpam.</string>
+    <string name="denylist_export_failed">Nie udało się wyeksportować czarnej listy.</string>
+    <string name="denylist_clear_selection">Wyczyść zaznaczenie</string>
+    <string name="more_options">Więcej opcji</string>
+    <string name="denylist_pattern_label">Numer lub wzorzec</string>
+    <string name="denylist_name_label">Nazwa (opcjonalnie)</string>
+    <string name="denylist_select">Zaznacz</string>
 </resources>
