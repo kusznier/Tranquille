@@ -1,13 +1,12 @@
 [versions]
-agp = "8.10.0"
-kotlin = "2.1.21"
+agp = "9.5.3"
+kotlin = "2.4.10"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 kotlinxCoroutines = "1.10.2"
-multidex = "2.0.1"
 slf4j = "2.0.12"
 logback = "3.0.0"
 conscrypt = "2.5.2"
@@ -20,7 +19,7 @@ google-material = "1.12.0"
 preference = "1.2.1"
 work-runtime = "2.10.1"
 eventbus = "3.3.1"
-sqldelight = "2.1.0"
+sqldelight = "2.4.1"
 sqlite-android = "2.5.1"
 
 [libraries]
@@ -33,13 +32,13 @@ androidx-preference = { group = "androidx.preference", name = "preference", vers
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 androidx-recyclerview-selection = { group = "androidx.recyclerview", name = "recyclerview-selection", version.ref = "recyclerview-selection" }
 androidx-paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging-runtime" }
-androidx-multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
 
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
@@ -61,7 +60,6 @@ eventbus-annotation-processor = { group = "org.greenrobot", name = "eventbus-ann
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
-jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 [bundles]

@@ -39,7 +39,6 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileWriter
 import java.io.IOException
-import java.util.Objects
 
 class DenylistActivity : AppCompatActivity() {
 
@@ -169,7 +168,7 @@ class DenylistActivity : AppCompatActivity() {
         itemLiveData.observe(this) { data: PagedList<DenylistItem>? ->
             denylistAdapter.submitList(data)
             if (listLayoutManagerSavedState != null) {
-                Objects.requireNonNull<RecyclerView.LayoutManager?>(recyclerView.layoutManager)
+                requireNotNull(recyclerView.layoutManager)
                     .onRestoreInstanceState(listLayoutManagerSavedState)
 
                 listLayoutManagerSavedState = null

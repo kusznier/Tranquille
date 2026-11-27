@@ -1,15 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-    alias(libs.plugins.androidApplication) apply false
-    alias(libs.plugins.jetbrainsKotlinAndroid) apply false
+buildscript {
+    dependencies {
+        // AGP 9 compiles Kotlin with its built-in Kotlin support (AGP 9.5 bundles
+        // Kotlin 2.2.10). Pin the Kotlin Gradle plugin to the version in the catalog.
+        classpath(libs.kotlin.gradle.plugin)
+    }
 }
 
-// Project build.gradle.kts file.
-buildscript {
-    extra["kotlin_version"] = "1.8.0"
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
-    }
+plugins {
+    alias(libs.plugins.androidApplication) apply false
 }
 
 // The vendored library keeps its original build file, which only declares
