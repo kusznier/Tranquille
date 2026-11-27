@@ -280,4 +280,27 @@
     <string name="denylist_pattern_label">Number or pattern</string>
     <string name="denylist_name_label">Name (optional)</string>
     <string name="denylist_select">Select</string>
+    <string name="status_protection_on">Protection is on</string>
+    <string name="status_db_version">Database version %d</string>
+    <string name="status_db_updated">updated %s</string>
+    <string name="status_db_never_updated">not updated yet</string>
+    <plurals name="status_denylist_count">
+        <item quantity="one">%d number on the denylist</item>
+        <item quantity="other">%d numbers on the denylist</item>
+    </plurals>
+    <string name="status_screening_off_title">Advanced blocking is off</string>
+    <string name="status_screening_off_text">Set Tranquille as the caller ID and spam app to block calls before the phone rings.</string>
+    <string name="status_blocking_off_title">Blocking is off</string>
+    <string name="status_blocking_off_text">No blocking option is on. Calls are only identified.</string>
+    <string name="status_notifications_off_title">Notifications are off</string>
+    <string name="status_notifications_off_text">Calls are still blocked, but you will not see who is calling or which calls were blocked.</string>
+    <string name="status_turn_on">Turn on</string>
+    <string name="status_grant">Allow</string>
+    <string name="recent_calls">Recent calls</string>
+    <string name="no_recent_calls">No recent calls</string>
+    <string name="block_a_number">Block a number</string>
+    <string name="call_type_incoming">Incoming</string>
+    <string name="call_type_outgoing">Outgoing</string>
+    <string name="call_type_missed">Missed</string>
+    <string name="call_type_rejected">Rejected or blocked</string>
 </resources>

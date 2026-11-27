@@ -46,6 +46,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme.Compose"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
