@@ -1,3 +1,4 @@
+<!-- Only used by Settings.init() for default values; the settings UI is in Compose. -->
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     app:title="@string/title_settings_activity">
 
@@ -87,13 +88,6 @@
             app:persistent="false"
             app:summary="@string/show_notifications_for_blocked_calls_summary"
             app:title="@string/show_notifications_for_blocked_calls" />
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/settings_screen_advanced">
-        <Preference
-            app:fragment="fr.vinetos.tranquille.AdvancedSettingsFragment"
-            app:key="screenAdvanced"
-            app:title="@string/settings_screen_advanced" />
     </PreferenceCategory>
 
 </PreferenceScreen>
