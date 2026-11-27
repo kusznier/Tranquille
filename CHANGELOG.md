@@ -5,7 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
-## [UNRELEASED]
+## [0.1.0] - 2026-11-27 (kusznier fork)
+
+First release of the [kusznier fork](https://github.com/kusznier/Tranquille), based on Tranquille `develop`.
+
+### Added
+
+- New interface in Jetpack Compose with Material 3 Expressive: dynamic color, dark theme, edge to edge.
+- Main screen status card: shows whether protection is on, or the missing database, call screening role, blocking option or notification permission with a button to fix it.
+- Denylist search, multi-select, undo after deleting, and a summary after importing (added, updated, already present).
+- Category and the number of negative/positive ratings (offline database) in call notifications.
+- Optional, off by default: online reviews for blocked calls, adding the most common reason to the notification (sends the blocked number to the reviews service).
+- Confirmation before resetting the database or its updates.
+- JVM unit tests and Robolectric UI tests; GitHub Actions for builds and signed releases.
+
+### Changed
+
+- LibPhoneNumberInfo is built from source (`libs/`), the platform SQLite replaces requery; no dependency comes from JitPack.
+- AGP 9.5, Gradle 9.6, Kotlin 2.4, compileSdk 37.1, minSdk 24 (Android 7.0); targetSdk stays 36.
+- "About" links to this fork and credits Tranquille and Yet Another Call Blocker.
+
+### Fixed
+
+- Adding a denylist entry overwrote the previous new entry.
+- Importing a backup could duplicate entries or overwrite unrelated entries with the same id.
+- Entries without a name were not saved.
+- Importing a NoPhoneSpam backup crashed at the end of the file.
+- The notification permission was never requested on Android 13+.
+- A denied notification permission was reported as the contacts permission.
+
+## [UNRELEASED] (upstream Tranquille)
 
 - Added ability to block calls with failed verification (requires Android >= 11 and advanced blocking mode)
 - Added icon to en-US fastlane metadata
