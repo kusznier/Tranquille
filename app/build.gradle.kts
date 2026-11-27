@@ -16,8 +16,8 @@ android {
         applicationId = "fr.vinetos.tranquille"
         minSdk = 24
         targetSdk = 36
-        versionCode = 3
-        versionName = "0.1.0-alpha02"
+        versionCode = 4
+        versionName = "0.1.0-alpha03"
         resValue("string", "app_id", "fr.vinetos.tranquille")
 
         javaCompileOptions {
@@ -118,6 +118,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.sqldelight.sqlite.driver)
     testImplementation(libs.robolectric)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.junit)
     testImplementation(platform(libs.compose.bom))
     testImplementation(libs.compose.ui.test.junit4)
