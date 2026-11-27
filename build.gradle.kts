@@ -9,6 +9,7 @@ buildscript {
 
 plugins {
     alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.composeCompiler) apply false
 }
 
 // The vendored library keeps its original build file, which only declares
