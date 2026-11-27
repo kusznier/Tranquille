@@ -94,7 +94,8 @@
         </activity>
         <activity
             android:name=".DbManagementActivity"
-            android:label="@string/db_management_activity_label" />
+            android:label="@string/db_management_activity_label"
+            android:theme="@style/AppTheme.Compose" />
         <activity
             android:name=".ReviewsActivity"
             android:label="@string/title_activity_reviews"
