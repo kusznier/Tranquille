@@ -232,4 +232,5 @@
     <string name="db_filtering_info_summary">Ta funkcja pozwala zaoszczędzić miejsce w pamięci przez usuwanie niektórych danych, które ciebie nie dotyczą (jak numery należące do innych regionów lub krajów). Nie wpływa to na ogólną wydajność aplikacji (jak blokowanie połączeń). Filtrowanie odbywa się podczas pierwszego pobierania bazy danych i w czasie jej aktualizacji. Istniejące dane (pobrane przed włączeniem filtrowania) można przefiltrować za pomocą poniższej opcji „Filtruj bazę danych”. Wyłączenie funkcji lub zmiana jej parametrów nie przywraca usuniętych danych – w tym celu musisz ponownie pobrać bazę danych</string>
     <string name="settings_screen_db_filtering">Filtrowanie bazy danych</string>
     <string name="settings_category_database">Baza danych</string>
+    <string name="check_for_db_updates">Sprawdź aktualizacje</string>
 </resources>

@@ -118,6 +118,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.sqldelight.sqlite.driver)
     testImplementation(libs.robolectric)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.junit)
     testImplementation(platform(libs.compose.bom))
     testImplementation(libs.compose.ui.test.junit4)
