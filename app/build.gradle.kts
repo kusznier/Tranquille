@@ -1,21 +1,23 @@
 plugins {
     alias(libs.plugins.androidApplication)
-//    alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.sqldelight)
-    kotlin("android")
 }
 
 android {
     namespace = "fr.vinetos.tranquille"
-    compileSdk = 36
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId = "fr.vinetos.tranquille"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 2
         versionName = "0.1.0-alpha01"
-        multiDexEnabled = true
+        resValue("string", "app_id", "fr.vinetos.tranquille")
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -48,11 +50,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     lint {
@@ -61,11 +60,7 @@ android {
     }
     buildFeatures {
         buildConfig = true
-    }
-
-    applicationVariants.all {
-        val variant = this
-        variant.resValue("string", "app_id", variant.applicationId)
+        resValues = true
     }
 }
 
@@ -86,7 +81,6 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.recyclerview.selection)
     implementation(libs.androidx.paging)
-    implementation(libs.androidx.multidex)
     implementation(libs.google.material)
     implementation(libs.slf4j)
     implementation(libs.conscrypt)
