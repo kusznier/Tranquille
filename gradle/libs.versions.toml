@@ -16,10 +16,6 @@ logback = "3.0.0"
 conscrypt = "2.5.2"
 okhttp = "4.12.0"
 commons-csv = "1.10.0"
-recyclerview = "1.4.0"
-recyclerview-selection = "1.2.0"
-paging-runtime = "3.3.6"
-google-material = "1.12.0"
 preference = "1.2.1"
 work-runtime = "2.10.1"
 eventbus = "3.3.1"
@@ -44,11 +40,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
-androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
-androidx-recyclerview-selection = { group = "androidx.recyclerview", name = "recyclerview-selection", version.ref = "recyclerview-selection" }
-androidx-paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging-runtime" }
 
-google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
