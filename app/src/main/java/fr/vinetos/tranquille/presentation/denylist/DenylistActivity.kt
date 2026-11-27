@@ -245,7 +245,7 @@ class DenylistActivity : AppCompatActivity() {
                             denylistDao,
                             YacbHolder.getDenylistService(),
                             pfd.fileDescriptor
-                        )
+                        ) != null
                     ) {
                         Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show()
                     } else {

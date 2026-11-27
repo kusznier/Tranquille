@@ -10,8 +10,16 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.robolectric.annotation.ConscryptMode
 import java.util.Date
 
+// Runs under Robolectric like DenylistImportIntegrationTest: the SQLite JDBC driver
+// registered inside the Robolectric sandbox is not visible to plain JVM tests in the
+// same process, so all database tests share the sandbox.
+@ConscryptMode(ConscryptMode.Mode.OFF)
+@RunWith(AndroidJUnit4::class)
 class DenylistDaoTest {
 
     private lateinit var driver: JdbcSqliteDriver
