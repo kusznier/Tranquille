@@ -84,17 +84,33 @@ public class NotificationHelper {
     }
 
     public static void showBlockedCallNotification(Context context, NumberInfo numberInfo) {
+        if (showBlockedCallNotification(context, numberInfo, null)
+                && App.getSettings().getReviewsForBlockedCalls()
+                && !numberInfo.noNumber && numberInfo.contactItem == null) {
+            // Opt-in: load online reviews in the background and update this notification.
+            BlockedCallReviewsWorker.enqueue(context, numberInfo.number);
+        }
+    }
+
+    /**
+     * Shows the blocked-call notification, with an optional summary of online reviews.
+     *
+     * @return false if blocked-call notifications are turned off
+     */
+    static boolean showBlockedCallNotification(Context context, NumberInfo numberInfo,
+                                               String onlineSummary) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             if (!App.getSettings().getNotificationsForBlockedCalls()) {
-                return;
+                return false;
             }
         }
 
-        Notification notification = createBlockedCallNotification(context, numberInfo);
+        Notification notification = createBlockedCallNotification(context, numberInfo, onlineSummary);
 
         String tag = NOTIFICATION_TAG_BLOCKED_CALL
                 + (!numberInfo.noNumber ? numberInfo.number : System.nanoTime()); // TODO: handle repeating
         notify(context, tag, NOTIFICATION_ID_BLOCKED_CALL, notification);
+        return true;
     }
 
     public static Notification createMonitoringServiceNotification(Context context) {
@@ -185,11 +201,16 @@ public class NotificationHelper {
         return new NotificationWithInfo(builder.build(), channelId);
     }
 
-    private static Notification createBlockedCallNotification(Context context, NumberInfo numberInfo) {
+    private static Notification createBlockedCallNotification(Context context, NumberInfo numberInfo,
+                                                              String onlineSummary) {
         String title = concat(context.getString(R.string.notification_blocked_call),
                 " - ", getTitleExtra(context, numberInfo));
 
         String text = getBlockedDescription(context, numberInfo);
+        if (!TextUtils.isEmpty(onlineSummary)) {
+            text = concat(context.getString(R.string.notification_online_reviews_summary, onlineSummary),
+                    "\n", text);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 context, CHANNEL_ID_BLOCKED_INFO)

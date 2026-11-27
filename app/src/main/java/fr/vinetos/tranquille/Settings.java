@@ -48,6 +48,7 @@ public class Settings extends GenericSettings {
     public static final String PREF_DATABASE_DOWNLOAD_URL = "databaseDownloadUrl";
     public static final String PREF_SAVE_CRASHES_TO_EXTERNAL_STORAGE = "saveCrashesToExternalStorage";
     public static final String PREF_SAVE_LOGCAT_ON_CRASH = "saveLogcatOnCrash";
+    public static final String PREF_REVIEWS_FOR_BLOCKED_CALLS = "reviewsForBlockedCalls";
 
     public static final String PREF_CALL_LOG_GROUPING_NONE = "none";
     public static final String PREF_CALL_LOG_GROUPING_CONSECUTIVE = "consecutive";
@@ -389,6 +390,19 @@ public class Settings extends GenericSettings {
 
     public void setSaveLogcatOnCrash(boolean flag) {
         setBoolean(PREF_SAVE_LOGCAT_ON_CRASH, flag);
+    }
+
+    /**
+     * Whether to load online reviews for calls that were blocked and add a summary to the
+     * blocked-call notification. Off by default: it sends the blocked number to the reviews
+     * service.
+     */
+    public boolean getReviewsForBlockedCalls() {
+        return getBoolean(PREF_REVIEWS_FOR_BLOCKED_CALLS, false);
+    }
+
+    public void setReviewsForBlockedCalls(boolean load) {
+        setBoolean(PREF_REVIEWS_FOR_BLOCKED_CALLS, load);
     }
 
 }

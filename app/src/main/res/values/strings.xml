@@ -307,4 +307,7 @@
     <string name="db_management_updates_removed">Database updates removed</string>
     <string name="db_management_reset_base_confirmation">The number database will be removed. Rating-based blocking stops until you download it again (about 25 MB).</string>
     <string name="db_management_reset_secondary_confirmation">Downloaded database updates will be removed. The next update downloads them again.</string>
+    <string name="reviews_for_blocked_calls">Online reviews for blocked calls</string>
+    <string name="reviews_for_blocked_calls_summary">After a call is blocked, load its online reviews and add the most common reason to the notification. This sends the blocked number to the reviews service.</string>
+    <string name="notification_online_reviews_summary">Online: %s</string>
 </resources>
