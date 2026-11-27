@@ -252,4 +252,29 @@
     <string name="denylist_pattern_label">Numer lub wzorzec</string>
     <string name="denylist_name_label">Nazwa (opcjonalnie)</string>
     <string name="denylist_select">Zaznacz</string>
+    <string name="status_protection_on">Ochrona włączona</string>
+    <string name="status_db_version">Wersja bazy %d</string>
+    <string name="status_db_updated">zaktualizowana %s</string>
+    <string name="status_db_never_updated">jeszcze nieaktualizowana</string>
+    <plurals name="status_denylist_count">
+        <item quantity="one">%d numer na czarnej liście</item>
+        <item quantity="few">%d numery na czarnej liście</item>
+        <item quantity="many">%d numerów na czarnej liście</item>
+        <item quantity="other">%d numeru na czarnej liście</item>
+    </plurals>
+    <string name="status_screening_off_title">Zaawansowane blokowanie wyłączone</string>
+    <string name="status_screening_off_text">Ustaw Tranquille jako aplikację do identyfikacji rozmówcy i spamu, aby blokować połączenia, zanim telefon zadzwoni.</string>
+    <string name="status_blocking_off_title">Blokowanie wyłączone</string>
+    <string name="status_blocking_off_text">Żadna opcja blokowania nie jest włączona. Połączenia są tylko rozpoznawane.</string>
+    <string name="status_notifications_off_title">Powiadomienia wyłączone</string>
+    <string name="status_notifications_off_text">Połączenia są nadal blokowane, ale nie zobaczysz, kto dzwoni ani które połączenia zostały zablokowane.</string>
+    <string name="status_turn_on">Włącz</string>
+    <string name="status_grant">Zezwól</string>
+    <string name="recent_calls">Ostatnie połączenia</string>
+    <string name="no_recent_calls">Brak ostatnich połączeń</string>
+    <string name="block_a_number">Zablokuj numer</string>
+    <string name="call_type_incoming">Przychodzące</string>
+    <string name="call_type_outgoing">Wychodzące</string>
+    <string name="call_type_missed">Nieodebrane</string>
+    <string name="call_type_rejected">Odrzucone lub zablokowane</string>
 </resources>
