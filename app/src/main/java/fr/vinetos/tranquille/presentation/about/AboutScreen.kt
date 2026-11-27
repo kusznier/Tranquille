@@ -67,6 +67,7 @@ fun AboutScreen(
             Header()
             Links()
             DbCard(state, onCheckForUpdates, onOpenDbManagement)
+            Credits()
             Text(
                 text = stringResource(R.string.license),
                 style = MaterialTheme.typography.bodyMedium,
@@ -117,13 +118,35 @@ private fun Header() {
 
 @Composable
 private fun Links() {
-    val uriHandler = LocalUriHandler.current
-    val links = listOf(
-        R.string.homepage to R.string.url_repo,
-        R.string.faq to R.string.url_faq,
-        R.string.translate to R.string.url_translate,
-        R.string.issues to R.string.url_issues,
+    LinkCard(
+        listOf(
+            R.string.homepage to R.string.url_repo,
+            R.string.faq to R.string.url_faq,
+            R.string.issues to R.string.url_issues,
+        )
     )
+}
+
+/** Credits for the projects this fork is based on (AGPL-3.0). */
+@Composable
+private fun Credits() {
+    Text(
+        text = stringResource(R.string.about_based_on),
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.semantics { heading() },
+    )
+    LinkCard(
+        listOf(
+            R.string.about_upstream_tranquille to R.string.url_upstream_tranquille,
+            R.string.about_upstream_yacb to R.string.url_upstream_yacb,
+        )
+    )
+}
+
+@Composable
+private fun LinkCard(links: List<Pair<Int, Int>>) {
+    val uriHandler = LocalUriHandler.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(

@@ -284,4 +284,7 @@
     <string name="reviews_for_blocked_calls">Opinie online dla zablokowanych połączeń</string>
     <string name="reviews_for_blocked_calls_summary">Po zablokowaniu połączenia pobierz jego opinie online i dopisz najczęstszy powód do powiadomienia. Numer zablokowanego połączenia trafia wtedy do serwisu opinii.</string>
     <string name="notification_online_reviews_summary">Opinie online: %s</string>
+    <string name="about_based_on">Na podstawie</string>
+    <string name="about_upstream_tranquille">Tranquille, autor: Vinetos</string>
+    <string name="about_upstream_yacb">Yet Another Call Blocker, autor: xynngh</string>
 </resources>

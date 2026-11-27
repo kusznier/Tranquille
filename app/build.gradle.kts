@@ -16,8 +16,8 @@ android {
         applicationId = "fr.vinetos.tranquille"
         minSdk = 24
         targetSdk = 36
-        versionCode = 9
-        versionName = "0.1.0-alpha08"
+        versionCode = 10
+        versionName = "0.1.0"
         resValue("string", "app_id", "fr.vinetos.tranquille")
 
         javaCompileOptions {

@@ -257,10 +257,12 @@
     <string name="translate">Translate the app on Weblate</string>
     <string name="issues">Get support / report a problem</string>
     <string name="license">This application is licensed under AGPL-3.0-only.</string>
-    <string name="url_repo" translatable="false">https://gitlab.com/xynngh/YetAnotherCallBlocker</string>
-    <string name="url_faq" translatable="false">https://gitlab.com/xynngh/YetAnotherCallBlocker/-/blob/master/FAQ.md</string>
+    <string name="url_repo" translatable="false">https://github.com/kusznier/Tranquille</string>
+    <string name="url_faq" translatable="false">https://github.com/kusznier/Tranquille/blob/develop/FAQ.md</string>
     <string name="url_translate" translatable="false">https://hosted.weblate.org/engage/yet-another-call-blocker/</string>
-    <string name="url_issues" translatable="false">https://gitlab.com/xynngh/YetAnotherCallBlocker/-/issues</string>
+    <string name="url_issues" translatable="false">https://github.com/kusznier/Tranquille/issues</string>
+    <string name="url_upstream_tranquille" translatable="false">https://github.com/Vinetos/Tranquille</string>
+    <string name="url_upstream_yacb" translatable="false">https://gitlab.com/xynngh/YetAnotherCallBlocker</string>
     <string name="denylist_item_name_empty">Name is empty</string>
     <string name="check_for_db_updates">Check for updates</string>
     <string name="denylist_search_hint">Search name or number</string>
@@ -310,4 +312,7 @@
     <string name="reviews_for_blocked_calls">Online reviews for blocked calls</string>
     <string name="reviews_for_blocked_calls_summary">After a call is blocked, load its online reviews and add the most common reason to the notification. This sends the blocked number to the reviews service.</string>
     <string name="notification_online_reviews_summary">Online: %s</string>
+    <string name="about_based_on">Based on</string>
+    <string name="about_upstream_tranquille">Tranquille by Vinetos</string>
+    <string name="about_upstream_yacb">Yet Another Call Blocker by xynngh</string>
 </resources>
