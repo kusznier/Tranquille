@@ -144,7 +144,7 @@ public class PermissionHelper {
                         contactsDenied = true;
                     }
                     if (NOTIFICATIONS_PERMISSIONS.contains(permission)) {
-                        contactsDenied = true;
+                        notificationDenied = true;
                     }
                 }
             }
@@ -203,7 +203,11 @@ public class PermissionHelper {
 
     public static RequestToken requestCallScreening(Activity activity, Fragment fragment) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            RoleManagerHelper.requestCallScreeningRole(activity, fragment);
+            if (fragment != null) {
+                RoleManagerHelper.requestCallScreeningRole(activity, fragment);
+            } else {
+                RoleManagerHelper.requestCallScreeningRole(activity);
+            }
             return null;
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return setAsDefaultDialer(activity, fragment);

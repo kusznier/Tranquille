@@ -84,17 +84,33 @@ public class NotificationHelper {
     }
 
     public static void showBlockedCallNotification(Context context, NumberInfo numberInfo) {
+        if (showBlockedCallNotification(context, numberInfo, null)
+                && App.getSettings().getReviewsForBlockedCalls()
+                && !numberInfo.noNumber && numberInfo.contactItem == null) {
+            // Opt-in: load online reviews in the background and update this notification.
+            BlockedCallReviewsWorker.enqueue(context, numberInfo.number);
+        }
+    }
+
+    /**
+     * Shows the blocked-call notification, with an optional summary of online reviews.
+     *
+     * @return false if blocked-call notifications are turned off
+     */
+    static boolean showBlockedCallNotification(Context context, NumberInfo numberInfo,
+                                               String onlineSummary) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             if (!App.getSettings().getNotificationsForBlockedCalls()) {
-                return;
+                return false;
             }
         }
 
-        Notification notification = createBlockedCallNotification(context, numberInfo);
+        Notification notification = createBlockedCallNotification(context, numberInfo, onlineSummary);
 
         String tag = NOTIFICATION_TAG_BLOCKED_CALL
                 + (!numberInfo.noNumber ? numberInfo.number : System.nanoTime()); // TODO: handle repeating
         notify(context, tag, NOTIFICATION_ID_BLOCKED_CALL, notification);
+        return true;
     }
 
     public static Notification createMonitoringServiceNotification(Context context) {
@@ -185,11 +201,16 @@ public class NotificationHelper {
         return new NotificationWithInfo(builder.build(), channelId);
     }
 
-    private static Notification createBlockedCallNotification(Context context, NumberInfo numberInfo) {
+    private static Notification createBlockedCallNotification(Context context, NumberInfo numberInfo,
+                                                              String onlineSummary) {
         String title = concat(context.getString(R.string.notification_blocked_call),
                 " - ", getTitleExtra(context, numberInfo));
 
         String text = getBlockedDescription(context, numberInfo);
+        if (!TextUtils.isEmpty(onlineSummary)) {
+            text = concat(context.getString(R.string.notification_online_reviews_summary, onlineSummary),
+                    "\n", text);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 context, CHANNEL_ID_BLOCKED_INFO)
@@ -208,14 +229,15 @@ public class NotificationHelper {
     }
 
     private static String getTitleExtra(Context context, NumberInfo numberInfo) {
-        return NumberInfoUtils.getShortDescription(context, numberInfo);
+        return concat(NumberInfoUtils.getShortDescription(context, numberInfo), " · ",
+                NumberInfoUtils.getShortRatings(context, numberInfo));
     }
 
     private static String getInfoDescription(Context context, NumberInfo numberInfo) {
         String text = numberInfo.name;
 
         text = concat(text, "; ", getCommunityDescriptionPart(context, numberInfo));
-        text = concat(text, "\n", getBlacklistDescriptionPart(context, numberInfo));
+        text = concat(text, "\n", getDenylistDescriptionPart(context, numberInfo));
         text = concat(text, "\n", getNumberDescriptionPart(context, numberInfo));
 
         return text;
@@ -224,11 +246,20 @@ public class NotificationHelper {
     private static String getBlockedDescription(Context context, NumberInfo numberInfo) {
         String text = numberInfo.name;
 
+        text = concat(text, "\n", getFailedVerificationDescriptionPart(context, numberInfo));
         text = concat(text, "\n", getCommunityDescriptionPart(context, numberInfo));
-        text = concat(text, "\n", getBlacklistDescriptionPart(context, numberInfo));
+        text = concat(text, "\n", getDenylistDescriptionPart(context, numberInfo));
         text = concat(text, "\n", getNumberDescriptionPart(context, numberInfo));
 
         return text;
+    }
+
+    private static String getFailedVerificationDescriptionPart(Context context, NumberInfo numberInfo) {
+        if (numberInfo.isFailedVerification) {
+            return context.getString(R.string.info_failed_verification);
+        }
+
+        return null;
     }
 
     private static String getNumberDescriptionPart(Context context, NumberInfo numberInfo) {
@@ -239,7 +270,7 @@ public class NotificationHelper {
         if (numberInfo.communityDatabaseItem != null) {
             CommunityDatabaseItem communityItem = numberInfo.communityDatabaseItem;
 
-            if (communityItem.hasRatings()) {
+            if (NumberInfoUtils.hasAnyRatings(communityItem)) {
                 return context.getString(R.string.notification_incoming_call_text_description,
                         communityItem.getNegativeRatingsCount(), communityItem.getPositiveRatingsCount(),
                         communityItem.getNeutralRatingsCount());
@@ -249,10 +280,10 @@ public class NotificationHelper {
         return null;
     }
 
-    private static String getBlacklistDescriptionPart(Context context, NumberInfo numberInfo) {
-        if (numberInfo.blacklistItem != null && numberInfo.contactItem == null) {
-            String name = numberInfo.blacklistItem.getName();
-            return context.getString(R.string.info_in_blacklist)
+    private static String getDenylistDescriptionPart(Context context, NumberInfo numberInfo) {
+        if (numberInfo.denylistItem != null && numberInfo.contactItem == null) {
+            String name = numberInfo.denylistItem.getName();
+            return context.getString(R.string.info_in_denylist)
                     + (!TextUtils.isEmpty(name) ? " (" + name + ")" : "");
         }
 

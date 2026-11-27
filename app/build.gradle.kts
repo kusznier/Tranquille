@@ -1,20 +1,24 @@
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("org.greenrobot.greendao")
+    alias(libs.plugins.sqldelight)
+    alias(libs.plugins.composeCompiler)
 }
 
 android {
     namespace = "fr.vinetos.tranquille"
-    compileSdk = 34
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId = "fr.vinetos.tranquille"
-        minSdk = 14
-        targetSdk = 34
-        versionCode = 1
-        versionName = "0.0.1"
-        multiDexEnabled = true
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 10
+        versionName = "0.1.0"
+        resValue("string", "app_id", "fr.vinetos.tranquille")
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -22,8 +26,23 @@ android {
             }
         }
     }
+    // Release signing is configured only when the keystore is provided through
+    // environment variables (see .github/workflows/release.yml). Without them
+    // the release build stays unsigned, as before.
+    val releaseKeystore: String? = System.getenv("TRANQUILLE_KEYSTORE_FILE")
+    signingConfigs {
+        if (!releaseKeystore.isNullOrEmpty()) {
+            create("release") {
+                storeFile = file(releaseKeystore)
+                storePassword = System.getenv("TRANQUILLE_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("TRANQUILLE_KEY_ALIAS")
+                keyPassword = System.getenv("TRANQUILLE_KEY_PASSWORD")
+            }
+        }
+    }
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -32,52 +51,74 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
     }
 
     lint {
         abortOnError = false
         lintConfig = file("lint.xml")
     }
-
-    applicationVariants.all {
-        val variant = this
-        variant.resValue("string", "app_id", variant.applicationId)
+    buildFeatures {
+        buildConfig = true
+        resValues = true
+        compose = true
     }
 }
 
-greendao {
-    schemaVersion = 1
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("fr.vinetos.tranquille.data")
+            dialect(libs.sqldelight.dialects.sql)
+        }
+    }
 }
 
 dependencies {
-
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.preference)
     implementation(libs.androidx.work.runtime)
-    implementation(libs.androidx.recyclerview)
-    implementation(libs.androidx.recyclerview.selection)
-    implementation(libs.androidx.paging)
-    implementation(libs.androidx.multidex)
-    implementation(libs.google.material)
     implementation(libs.slf4j)
     implementation(libs.conscrypt)
     implementation(libs.okhttp)
-    implementation(libs.lib.phone.number.info)
+    implementation(project(":sia"))
     implementation(libs.commons.csv)
-    implementation(libs.greendao)
+    implementation(libs.sqldelight.driver)
+    implementation(libs.sqldelight.coroutines)
+    implementation(libs.bundles.sqlite)
     implementation(libs.eventbus)
+
+    // todo add kotlin coriutines dependency
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
     annotationProcessor(libs.eventbus.annotation.processor)
 
     runtimeOnly(libs.logback)
 
     testImplementation(libs.junit)
+    testImplementation(libs.sqldelight.sqlite.driver)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.junit)
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.compose.ui.test.manifest)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

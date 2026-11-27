@@ -8,3 +8,6 @@
 .externalNativeBuild
 
 /app/src/main/assets/sia
+
+# Build output of the vendored library module
+/libs/LibPhoneNumberInfo/sia/build/

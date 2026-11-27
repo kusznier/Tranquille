@@ -1,0 +1,59 @@
+name: Build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      # Also validates the checksum of gradle-wrapper.jar.
+      - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+
+      # Maven Central rate-limits bursts of requests (HTTP 429) when several builds
+      # start at once; let Gradle retry downloads with a longer backoff.
+      - name: Retry dependency downloads
+        run: |
+          mkdir -p "$HOME/.gradle"
+          echo "systemProp.org.gradle.internal.repository.max.tentatives=8" >> "$HOME/.gradle/gradle.properties"
+          echo "systemProp.org.gradle.internal.repository.initial.backoff=2000" >> "$HOME/.gradle/gradle.properties"
+
+      - name: Install Android SDK packages
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.1" "build-tools;36.0.0" > /dev/null
+
+      - name: Build debug APK and run unit tests
+        run: ./gradlew --console=plain assembleDebug testDebugUnitTest
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-reports
+          path: app/build/reports/tests/
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: tranquille-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 14

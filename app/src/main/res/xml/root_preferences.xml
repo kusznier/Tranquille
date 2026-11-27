@@ -1,3 +1,4 @@
+<!-- Only used by Settings.init() for default values; the settings UI is in Compose. -->
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     app:title="@string/title_settings_activity">
 
@@ -43,14 +44,18 @@
             app:title="@string/block_hidden_number" />
         <SwitchPreferenceCompat
             app:defaultValue="true"
-            app:key="blockBlacklisted"
-            app:summary="@string/block_blacklisted_summary"
-            app:title="@string/block_blacklisted" />
+            app:key="blockDenylisted"
+            app:summary="@string/block_denylisted_summary"
+            app:title="@string/block_denylisted" />
         <SwitchPreferenceCompat
             app:key="useCallScreeningService"
             app:persistent="false"
             app:summary="@string/use_call_screening_service_summary"
             app:title="@string/use_call_screening_service" />
+        <SwitchPreferenceCompat
+            app:key="blockFailedVerification"
+            app:summary="@string/block_failed_verification_summary"
+            app:title="@string/block_failed_verification" />
     </PreferenceCategory>
 
     <SwitchPreferenceCompat
@@ -83,13 +88,6 @@
             app:persistent="false"
             app:summary="@string/show_notifications_for_blocked_calls_summary"
             app:title="@string/show_notifications_for_blocked_calls" />
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/settings_screen_advanced">
-        <Preference
-            app:fragment="dummydomain.yetanothercallblocker.AdvancedSettingsFragment"
-            app:key="screenAdvanced"
-            app:title="@string/settings_screen_advanced" />
     </PreferenceCategory>
 
 </PreferenceScreen>

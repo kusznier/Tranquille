@@ -1,0 +1,119 @@
+name: Release
+
+# Builds a signed APK and publishes it as GitHub release "v<versionName>".
+# Start it either by pushing a tag "v<versionName>" (e.g. v0.1.0), or from the
+# Actions tab with "Run workflow" on a branch (the tag is then created at that
+# commit). Signing uses repository secrets only.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        description: "Mark as pre-release (Obtainium and similar tools skip it by default)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Determine release tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(sed -n 's/^ *versionName = "\(.*\)"$/\1/p' app/build.gradle.kts)
+          tag="v$version"
+          if [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$tag" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match versionName $version" >&2
+            exit 1
+          fi
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "Release $tag already exists; bump versionName/versionCode first" >&2
+            exit 1
+          fi
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+        with:
+          cache-read-only: true
+
+      # Maven Central rate-limits bursts of requests (HTTP 429) when several builds
+      # start at once; let Gradle retry downloads with a longer backoff.
+      - name: Retry dependency downloads
+        run: |
+          mkdir -p "$HOME/.gradle"
+          echo "systemProp.org.gradle.internal.repository.max.tentatives=8" >> "$HOME/.gradle/gradle.properties"
+          echo "systemProp.org.gradle.internal.repository.initial.backoff=2000" >> "$HOME/.gradle/gradle.properties"
+
+      - name: Install Android SDK packages
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.1" "build-tools;36.0.0" > /dev/null
+
+      - name: Run unit tests
+        run: ./gradlew --console=plain testDebugUnitTest
+
+      - name: Decode keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.TRANQUILLE_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "Secret TRANQUILLE_KEYSTORE_BASE64 is not set" >&2
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.p12"
+
+      - name: Build signed release APK
+        env:
+          TRANQUILLE_KEYSTORE_FILE: ${{ runner.temp }}/release.p12
+          TRANQUILLE_KEYSTORE_PASSWORD: ${{ secrets.TRANQUILLE_KEYSTORE_PASSWORD }}
+          TRANQUILLE_KEY_ALIAS: ${{ secrets.TRANQUILLE_KEY_ALIAS }}
+          TRANQUILLE_KEY_PASSWORD: ${{ secrets.TRANQUILLE_KEY_PASSWORD }}
+        run: ./gradlew --console=plain assembleRelease
+
+      - name: Remove keystore
+        if: always()
+        run: rm -f "$RUNNER_TEMP/release.p12"
+
+      - name: Verify signature
+        run: |
+          apk=app/build/outputs/apk/release/app-release.apk
+          apksigner="$ANDROID_HOME/build-tools/36.0.0/apksigner"
+          "$apksigner" verify --verbose --print-certs "$apk" | tee "$RUNNER_TEMP/certs.txt"
+          if grep -q "CN=Android Debug" "$RUNNER_TEMP/certs.txt"; then
+            echo "APK is signed with a debug key" >&2
+            exit 1
+          fi
+          mkdir -p dist
+          cp "$apk" "dist/tranquille-$TAG.apk"
+          (cd dist && sha256sum "tranquille-$TAG.apk" > "tranquille-$TAG.apk.sha256")
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          flags=()
+          if [ "$PRERELEASE" = "true" ]; then flags+=(--prerelease); fi
+          cert=$(grep "certificate SHA-256 digest" "$RUNNER_TEMP/certs.txt" | head -1 | sed 's/.*: //')
+          {
+            echo "APK SHA-256: \`$(cut -d' ' -f1 dist/*.sha256)\`"
+            echo
+            echo "Signing certificate SHA-256: \`$cert\`"
+          } > "$RUNNER_TEMP/notes.md"
+          gh release create "$TAG" dist/* \
+            --target "$GITHUB_SHA" \
+            --title "Tranquille $TAG" \
+            --notes-file "$RUNNER_TEMP/notes.md" "${flags[@]}"

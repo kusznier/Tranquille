@@ -1,6 +1,7 @@
 package fr.vinetos.tranquille;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -21,9 +22,10 @@ public class Settings extends GenericSettings {
 
     public static final String PREF_INCOMING_CALL_NOTIFICATIONS = "incomingCallNotifications";
     public static final String PREF_BLOCK_NEGATIVE_SIA_NUMBERS = "blockNegativeSiaNumbers";
+    public static final String PREF_BLOCK_FAILED_VERIFICATION = "blockFailedVerification";
     public static final String PREF_BLOCK_HIDDEN_NUMBERS = "blockHiddenNumbers";
-    public static final String PREF_BLOCK_BLACKLISTED = "blockBlacklisted";
-    public static final String PREF_BLACKLIST_IS_NOT_EMPTY = "blacklistIsNotEmpty";
+    public static final String PREF_BLOCK_DENYLISTED = "blockDenylisted";
+    public static final String PREF_DENYLIST_IS_NOT_EMPTY = "denylistIsNotEmpty";
     public static final String PREF_USE_CONTACTS = "useContacts";
     public static final String PREF_UI_MODE = "uiMode";
     public static final String PREF_CALL_LOG_GROUPING = "callLogGrouping";
@@ -46,13 +48,14 @@ public class Settings extends GenericSettings {
     public static final String PREF_DATABASE_DOWNLOAD_URL = "databaseDownloadUrl";
     public static final String PREF_SAVE_CRASHES_TO_EXTERNAL_STORAGE = "saveCrashesToExternalStorage";
     public static final String PREF_SAVE_LOGCAT_ON_CRASH = "saveLogcatOnCrash";
+    public static final String PREF_REVIEWS_FOR_BLOCKED_CALLS = "reviewsForBlockedCalls";
 
     public static final String PREF_CALL_LOG_GROUPING_NONE = "none";
     public static final String PREF_CALL_LOG_GROUPING_CONSECUTIVE = "consecutive";
     public static final String PREF_CALL_LOG_GROUPING_DAY = "day";
 
     public static final String PREF_BLOCK_IN_LIMITED_MODE_RATING = "rating";
-    public static final String PREF_BLOCK_IN_LIMITED_MODE_BLACKLIST = "blacklist";
+    public static final String PREF_BLOCK_IN_LIMITED_MODE_DENYLIST = "denylist";
 
     static final String SYS_PREFERENCES_VERSION = "__preferencesVersion";
 
@@ -115,8 +118,14 @@ public class Settings extends GenericSettings {
         return getBoolean(PREF_INCOMING_CALL_NOTIFICATIONS, true);
     }
 
+    /**
+     * Whether the app needs the notification permission (Android 13+):
+     * true when incoming-call or blocked-call notifications are enabled.
+     * The former "useNotifications" preference was never set anywhere, so the
+     * permission was never requested.
+     */
     public boolean getUseNotification() {
-        return getBoolean(PREF_USE_NOTIFICATIONS);
+        return getIncomingCallNotifications() || getNotificationsForBlockedCalls();
     }
 
     public void setIncomingCallNotifications(boolean show) {
@@ -124,7 +133,10 @@ public class Settings extends GenericSettings {
     }
 
     public boolean getCallBlockingEnabled() {
-        return getBlockNegativeSiaNumbers() || getBlockHiddenNumbers() || getBlacklistEnabled();
+        return getBlockNegativeSiaNumbers() ||
+            getBlockHiddenNumbers() ||
+            getDenylistEnabled() ||
+            getBlockFailedVerificationEnabled();
     }
 
     public boolean getBlockNegativeSiaNumbers() {
@@ -135,6 +147,19 @@ public class Settings extends GenericSettings {
         setBoolean(PREF_BLOCK_NEGATIVE_SIA_NUMBERS, block);
     }
 
+    /**
+     * STIR verification is only available from Android 11
+     */
+    public boolean getBlockFailedVerificationEnabled() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            PermissionHelper.isCallScreeningHeld(context) &&
+            getBoolean(PREF_BLOCK_FAILED_VERIFICATION);
+    }
+
+    public void setBlockFailedVerificationEnabled(boolean block) {
+        setBoolean(PREF_BLOCK_FAILED_VERIFICATION, block);
+    }
+
     public boolean getBlockHiddenNumbers() {
         return getBoolean(PREF_BLOCK_HIDDEN_NUMBERS);
     }
@@ -143,24 +168,24 @@ public class Settings extends GenericSettings {
         setBoolean(PREF_BLOCK_HIDDEN_NUMBERS, block);
     }
 
-    public boolean getBlacklistEnabled() {
-        return getBlockBlacklisted() && getBlacklistIsNotEmpty();
+    public boolean getDenylistEnabled() {
+        return getBlockDenylisted() && getDenylistIsNotEmpty();
     }
 
-    public boolean getBlockBlacklisted() {
-        return getBoolean(PREF_BLOCK_BLACKLISTED, true);
+    public boolean getBlockDenylisted() {
+        return getBoolean(PREF_BLOCK_DENYLISTED, true);
     }
 
-    public void setBlockBlacklisted(boolean block) {
-        setBoolean(PREF_BLOCK_BLACKLISTED, block);
+    public void setBlockDenylisted(boolean block) {
+        setBoolean(PREF_BLOCK_DENYLISTED, block);
     }
 
-    public boolean getBlacklistIsNotEmpty() {
-        return getBoolean(PREF_BLACKLIST_IS_NOT_EMPTY);
+    public boolean getDenylistIsNotEmpty() {
+        return getBoolean(PREF_DENYLIST_IS_NOT_EMPTY);
     }
 
-    public void setBlacklistIsNotEmpty(boolean flag) {
-        setBoolean(PREF_BLACKLIST_IS_NOT_EMPTY, flag);
+    public void setDenylistIsNotEmpty(boolean flag) {
+        setBoolean(PREF_DENYLIST_IS_NOT_EMPTY, flag);
     }
 
     public boolean getUseContacts() {
@@ -223,8 +248,8 @@ public class Settings extends GenericSettings {
         return getBlockInLimitedMode().contains(PREF_BLOCK_IN_LIMITED_MODE_RATING);
     }
 
-    public boolean isBlockingBlacklistedInLimitedModeAllowed() {
-        return getBlockInLimitedMode().contains(PREF_BLOCK_IN_LIMITED_MODE_BLACKLIST);
+    public boolean isBlockingDenylistedInLimitedModeAllowed() {
+        return getBlockInLimitedMode().contains(PREF_BLOCK_IN_LIMITED_MODE_DENYLIST);
     }
 
     public Set<String> getBlockInLimitedMode() {
@@ -365,6 +390,19 @@ public class Settings extends GenericSettings {
 
     public void setSaveLogcatOnCrash(boolean flag) {
         setBoolean(PREF_SAVE_LOGCAT_ON_CRASH, flag);
+    }
+
+    /**
+     * Whether to load online reviews for calls that were blocked and add a summary to the
+     * blocked-call notification. Off by default: it sends the blocked number to the reviews
+     * service.
+     */
+    public boolean getReviewsForBlockedCalls() {
+        return getBoolean(PREF_REVIEWS_FOR_BLOCKED_CALLS, false);
+    }
+
+    public void setReviewsForBlockedCalls(boolean load) {
+        setBoolean(PREF_REVIEWS_FOR_BLOCKED_CALLS, load);
     }
 
 }
