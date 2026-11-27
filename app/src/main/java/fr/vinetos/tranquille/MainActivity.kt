@@ -9,6 +9,10 @@ import android.provider.Settings as AndroidSettings
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import fr.vinetos.tranquille.data.NumberInfo
+import fr.vinetos.tranquille.presentation.info.NumberInfoDialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -31,6 +35,9 @@ class MainActivity : AppCompatActivity(), MainActions {
 
     private val settings get() = App.getSettings()
 
+    /** Number whose info dialog is open, if any. */
+    private var openedNumber by mutableStateOf<NumberInfo?>(null)
+
     private val viewModel: MainViewModel by viewModels {
         viewModelFactory { initializer { MainViewModel(AppMainRepository(applicationContext)) } }
     }
@@ -40,6 +47,9 @@ class MainActivity : AppCompatActivity(), MainActions {
         setTranquilleContent {
             val state by viewModel.state.collectAsStateWithLifecycle()
             MainScreen(state = state, actions = this)
+            openedNumber?.let { info ->
+                NumberInfoDialog(info, AppNumberInfoActions(this), onDismiss = { openedNumber = null })
+            }
         }
     }
 
@@ -108,7 +118,7 @@ class MainActivity : AppCompatActivity(), MainActions {
         startActivity(EditDenylistItemActivity.getIntent(this, null, null))
 
     override fun openCall(row: CallLogRow) {
-        InfoDialogHelper.showDialog(this, row.numberInfo, null)
+        openedNumber = row.numberInfo
     }
 
     override fun downloadDatabase() {

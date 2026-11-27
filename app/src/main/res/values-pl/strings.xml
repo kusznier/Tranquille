@@ -277,4 +277,8 @@
     <string name="call_type_outgoing">Wychodzące</string>
     <string name="call_type_missed">Nieodebrane</string>
     <string name="call_type_rejected">Odrzucone lub zablokowane</string>
+    <string name="db_management_db_removed">Baza danych usunięta</string>
+    <string name="db_management_updates_removed">Aktualizacje bazy danych usunięte</string>
+    <string name="db_management_reset_base_confirmation">Baza numerów zostanie usunięta. Blokowanie według oceny przestanie działać, dopóki nie pobierzesz jej ponownie (około 25 MB).</string>
+    <string name="db_management_reset_secondary_confirmation">Pobrane aktualizacje bazy zostaną usunięte. Następna aktualizacja pobierze je ponownie.</string>
 </resources>

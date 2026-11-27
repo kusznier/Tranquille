@@ -57,6 +57,7 @@
         </activity>
         <activity
             android:name=".LookupNumberActivity"
+            android:theme="@style/AppTheme.Compose"
             android:label="@string/title_lookup_number"
             android:parentActivityName=".MainActivity"
             >
@@ -93,12 +94,13 @@
         </activity>
         <activity
             android:name=".DbManagementActivity"
-            android:label="@string/db_management_activity_label" />
+            android:label="@string/db_management_activity_label"
+            android:theme="@style/AppTheme.Compose" />
         <activity
             android:name=".ReviewsActivity"
             android:label="@string/title_activity_reviews"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.Compose" />
         <activity
             android:name=".InfoDialogActivity"
             android:autoRemoveFromRecents="true"
