@@ -263,4 +263,21 @@
     <string name="url_issues" translatable="false">https://gitlab.com/xynngh/YetAnotherCallBlocker/-/issues</string>
     <string name="denylist_item_name_empty">Name is empty</string>
     <string name="check_for_db_updates">Check for updates</string>
+    <string name="denylist_search_hint">Search name or number</string>
+    <string name="denylist_clear_search">Clear search</string>
+    <string name="denylist_empty">No numbers on the denylist yet. Add one with the button below or import a backup.</string>
+    <string name="denylist_no_matches">No numbers match the search.</string>
+    <string name="denylist_undo">Undo</string>
+    <plurals name="denylist_deleted_count">
+        <item quantity="one">%d number deleted</item>
+        <item quantity="other">%d numbers deleted</item>
+    </plurals>
+    <string name="denylist_import_result">Import finished: %1$d added, %2$d updated, %3$d already on the list</string>
+    <string name="denylist_import_failed">The file could not be read. Choose a CSV backup from Yet Another Call Blocker or Tranquille, or a NoPhoneSpam backup.</string>
+    <string name="denylist_export_failed">The denylist could not be exported.</string>
+    <string name="denylist_clear_selection">Clear selection</string>
+    <string name="more_options">More options</string>
+    <string name="denylist_pattern_label">Number or pattern</string>
+    <string name="denylist_name_label">Name (optional)</string>
+    <string name="denylist_select">Select</string>
 </resources>

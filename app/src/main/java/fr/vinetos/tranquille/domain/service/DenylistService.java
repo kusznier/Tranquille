@@ -7,7 +7,6 @@ import java.util.Date;
 import fr.vinetos.tranquille.EventUtils;
 import fr.vinetos.tranquille.data.DenylistUtils;
 import fr.vinetos.tranquille.data.DenylistItem;
-import fr.vinetos.tranquille.DenylistDataSource;
 import fr.vinetos.tranquille.data.datasource.DenylistDao;
 import fr.vinetos.tranquille.event.DenylistChangedEvent;
 import fr.vinetos.tranquille.event.DenylistItemChangedEvent;

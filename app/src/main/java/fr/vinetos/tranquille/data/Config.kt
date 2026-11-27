@@ -25,7 +25,6 @@ import fr.vinetos.tranquille.Settings
 import fr.vinetos.tranquille.data.Database.Companion.Schema
 import fr.vinetos.tranquille.data.Database.Companion.invoke
 import fr.vinetos.tranquille.data.datasource.DateColumnAdapter
-import fr.vinetos.tranquille.DenylistDataSource
 import fr.vinetos.tranquille.data.datasource.DenylistDao
 import fr.vinetos.tranquille.domain.service.DenylistService
 import fr.vinetos.tranquille.utils.DbFilteringUtils
