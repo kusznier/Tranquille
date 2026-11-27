@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "fr.vinetos.tranquille"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 36
         versionCode = 3
         versionName = "0.1.0-alpha02"
