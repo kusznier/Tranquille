@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.composeCompiler)
 }
 
 android {
@@ -13,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "fr.vinetos.tranquille"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 36
         versionCode = 3
         versionName = "0.1.0-alpha02"
@@ -54,6 +55,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
+
     lint {
         abortOnError = false
         lintConfig = file("lint.xml")
@@ -61,6 +66,7 @@ android {
     buildFeatures {
         buildConfig = true
         resValues = true
+        compose = true
     }
 }
 
@@ -74,6 +80,14 @@ sqldelight {
 }
 
 dependencies {
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.preference)
@@ -103,6 +117,11 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.sqldelight.sqlite.driver)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.junit)
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.compose.ui.test.manifest)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
