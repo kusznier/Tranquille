@@ -91,6 +91,11 @@
             android:theme="@style/DialogBackgroundTheme"
             tools:targetApi="lollipop" />
         <activity
+            android:name=".BlockNumberActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@style/DialogBackgroundTheme" />
+        <activity
             android:name=".DummyDialerActivity"
             android:autoRemoveFromRecents="true"
             android:directBootAware="true"

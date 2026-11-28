@@ -328,4 +328,10 @@
     <string name="onboarding_database_title">Number database</string>
     <string name="onboarding_database_text">Ratings of spam numbers are stored on your phone, so checking a caller works offline. The database (about 25 MB) is downloaded from gitlab.com. Caller numbers are not sent anywhere for downloads or updates.</string>
     <string name="nav_calls">Calls</string>
+    <string name="block_number_title">Block this number?</string>
+    <string name="block_number_description">Description (optional)</string>
+    <string name="block_number_confirm">Block</string>
+    <string name="block_number_added">Added to the denylist</string>
+    <string name="block_number_already">This number is already on the denylist</string>
+    <string name="block_number_invalid">This number cannot be blocked</string>
 </resources>
