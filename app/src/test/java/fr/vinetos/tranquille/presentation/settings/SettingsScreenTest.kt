@@ -77,6 +77,21 @@ class SettingsScreenTest {
     }
 
     @Test
+    fun silenceNeedsCallScreeningAndRatingBlocking() {
+        show(SettingsPage.ROOT, SettingsUiState(callScreeningHeld = false, blockNegativeSiaNumbers = true))
+        scrollTo("Silence instead of rejecting")
+        compose.onNode(hasText("Silence instead of rejecting") and isToggleable()).assertIsNotEnabled()
+    }
+
+    @Test
+    fun silenceSwitchWritesChange() {
+        val (recorder, _) = show(SettingsPage.ROOT, SettingsUiState(callScreeningHeld = true, blockNegativeSiaNumbers = true))
+        scrollTo("Silence instead of rejecting")
+        compose.onNodeWithText("Silence instead of rejecting").performClick()
+        assertEquals(listOf<Any>(SettingsChange.SilenceRatedCalls(true)), recorder.calls)
+    }
+
+    @Test
     fun failedVerificationNeedsCallScreening() {
         show(SettingsPage.ROOT, SettingsUiState(callScreeningHeld = false))
         scrollTo("Block failed verification")
@@ -90,8 +105,10 @@ class SettingsScreenTest {
         compose.onNodeWithText("Online reviews for blocked calls").performClick()
         assertEquals(listOf<Any>(SettingsChange.ReviewsForBlockedCalls(true)), recorder.calls)
 
-        scrollTo("Advanced settings")
-        compose.onNode(hasText("Advanced settings") and hasClickActionMatcher()).performClick()
+        // "Advanced settings" is also a category heading above the clickable item.
+        val advanced = hasText("Advanced settings") and hasClickActionMatcher()
+        compose.onNode(hasScrollAction()).performScrollToNode(advanced)
+        compose.onNode(advanced).performClick()
         assertEquals(SettingsPage.ADVANCED, navigated())
     }
 

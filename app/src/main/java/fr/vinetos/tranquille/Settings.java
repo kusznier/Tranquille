@@ -52,6 +52,7 @@ public class Settings extends GenericSettings {
     public static final String PREF_ONBOARDING_DONE = "onboardingDone";
     public static final String PREF_CALL_ALERTS = "incomingCallAlerts";
     public static final String PREF_CALL_ACTIONS = "incomingCallActions";
+    public static final String PREF_SILENCE_RATED_CALLS = "silenceRatedCalls";
 
     public static final String PREF_CALL_LOG_GROUPING_NONE = "none";
     public static final String PREF_CALL_LOG_GROUPING_CONSECUTIVE = "consecutive";
@@ -424,6 +425,18 @@ public class Settings extends GenericSettings {
 
     public void setIncomingCallActions(boolean actions) {
         setBoolean(PREF_CALL_ACTIONS, actions);
+    }
+
+    /**
+     * Calls that would be blocked only because of a negative rating ring silently
+     * instead (Android 10+ with the call screening role; off by default).
+     */
+    public boolean getSilenceRatedCalls() {
+        return getBoolean(PREF_SILENCE_RATED_CALLS, false);
+    }
+
+    public void setSilenceRatedCalls(boolean silence) {
+        setBoolean(PREF_SILENCE_RATED_CALLS, silence);
     }
 
     /** The first-run setup screen was finished or skipped. */

@@ -17,6 +17,7 @@ data class SettingsUiState(
     val callLogGrouping: String = "consecutive",
     // Call blocking
     val blockNegativeSiaNumbers: Boolean = false,
+    val silenceRatedCalls: Boolean = false,
     val blockHiddenNumbers: Boolean = false,
     val blockDenylisted: Boolean = true,
     val callScreeningHeld: Boolean = false,
@@ -60,6 +61,7 @@ sealed interface SettingsChange {
     data class UiMode(val value: Int) : SettingsChange
     data class CallLogGrouping(val value: String) : SettingsChange
     data class BlockNegativeSiaNumbers(val value: Boolean) : SettingsChange
+    data class SilenceRatedCalls(val value: Boolean) : SettingsChange
     data class BlockHiddenNumbers(val value: Boolean) : SettingsChange
     data class BlockDenylisted(val value: Boolean) : SettingsChange
     data class BlockFailedVerification(val value: Boolean) : SettingsChange

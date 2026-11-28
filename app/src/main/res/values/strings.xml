@@ -343,4 +343,6 @@
     <string name="notification_channel_name_unknown_alert">Unknown calls (pop-up)</string>
     <string name="notification_channel_name_negative_alert">Negative calls (pop-up)</string>
     <string name="block_number_enter_manually">Enter a number</string>
+    <string name="silence_rated_calls">Silence instead of rejecting</string>
+    <string name="silence_rated_calls_summary">Calls blocked only because of a negative rating ring silently: you get the notification with Reject and Block and can still answer. Numbers on the denylist are still rejected. Needs advanced call blocking</string>
 </resources>

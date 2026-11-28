@@ -315,4 +315,6 @@
     <string name="notification_channel_name_unknown_alert">Nieznane połączenia (wyskakujące)</string>
     <string name="notification_channel_name_negative_alert">Złe połączenia (wyskakujące)</string>
     <string name="block_number_enter_manually">Wpisz numer</string>
+    <string name="silence_rated_calls">Wycisz zamiast odrzucać</string>
+    <string name="silence_rated_calls_summary">Połączenia blokowane tylko z powodu złej oceny dzwonią po cichu: dostajesz powiadomienie z przyciskami Odrzuć i Zablokuj i możesz odebrać. Numery z czarnej listy są nadal odrzucane. Wymaga zaawansowanego blokowania</string>
 </resources>
