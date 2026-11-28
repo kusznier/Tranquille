@@ -9,12 +9,15 @@ import kotlinx.coroutines.flow.asStateFlow
 data class SettingsUiState(
     // Main
     val incomingCallNotifications: Boolean = true,
+    val incomingCallAlerts: Boolean = true,
+    val incomingCallActions: Boolean = true,
     val autoUpdates: Boolean = false,
     val useContacts: Boolean = false,
     val uiMode: Int = -1,
     val callLogGrouping: String = "consecutive",
     // Call blocking
     val blockNegativeSiaNumbers: Boolean = false,
+    val silenceRatedCalls: Boolean = false,
     val blockHiddenNumbers: Boolean = false,
     val blockDenylisted: Boolean = true,
     val callScreeningHeld: Boolean = false,
@@ -51,11 +54,14 @@ interface SettingsStore {
 /** One user change; the store persists it the same way the old preference screens did. */
 sealed interface SettingsChange {
     data class IncomingCallNotifications(val value: Boolean) : SettingsChange
+    data class IncomingCallAlerts(val value: Boolean) : SettingsChange
+    data class IncomingCallActions(val value: Boolean) : SettingsChange
     data class AutoUpdates(val value: Boolean) : SettingsChange
     data class UseContacts(val value: Boolean) : SettingsChange
     data class UiMode(val value: Int) : SettingsChange
     data class CallLogGrouping(val value: String) : SettingsChange
     data class BlockNegativeSiaNumbers(val value: Boolean) : SettingsChange
+    data class SilenceRatedCalls(val value: Boolean) : SettingsChange
     data class BlockHiddenNumbers(val value: Boolean) : SettingsChange
     data class BlockDenylisted(val value: Boolean) : SettingsChange
     data class BlockFailedVerification(val value: Boolean) : SettingsChange

@@ -26,11 +26,12 @@ Requires Android 7.0 or newer. The APK is signed with this fork's key, so it can
 
 ## How to use
 
-* Launch the app and allow the requested permissions (phone, call log, notifications).
+* On the first launch a short setup asks, step by step and with the reason for each, to set Tranquille as the caller ID and spam app, to allow the permissions (phone, call log, notifications) and to download the number database. Every step can be skipped and done later.
+* The bottom bar switches between recent calls, the denylist and settings.
 * The card at the top of the main screen shows whether protection is on, or the one thing that is missing with a button to fix it: download the number database (about 25 MB, from [another GitLab repository](https://gitlab.com/xynngh/YetAnotherCallBlocker_data)), set Tranquille as the caller ID and spam app ("Advanced call blocking"), or allow notifications.
 * Turn on "Block based on rating" in that card to block calls with a negative rating.
-* Add numbers or patterns (`*` any digits, `#` one digit) to the denylist, or import a CSV backup from YACB, Tranquille or NoPhoneSpam.
-* Automatic database updates, contacts, the theme and everything else are in Settings.
+* Add numbers or patterns (`*` any digits, `#` one digit) on the denylist tab, or import a CSV backup from YACB, Tranquille or NoPhoneSpam.
+* Automatic database updates (off by default), contacts, the theme and everything else are on the settings tab.
 
 See [frequently asked questions](FAQ.md) to learn more.
 

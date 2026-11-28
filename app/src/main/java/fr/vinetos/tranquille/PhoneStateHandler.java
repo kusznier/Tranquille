@@ -1,6 +1,7 @@
 package fr.vinetos.tranquille;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.core.util.Predicate;
@@ -100,7 +101,8 @@ public class PhoneStateHandler {
                 settings.getCachedAutoDetectedCountryCode(), false);
 
         boolean blocked = false;
-        if (blockingEnabled && numberInfoService.shouldBlock(numberInfo)) {
+        if (blockingEnabled && numberInfoService.shouldBlock(numberInfo)
+                && !numberInfoService.shouldSilenceInstead(numberInfo, canSilenceCalls())) {
             blocked = PhoneUtils.endCall(context, isOffHook);
 
             if (blocked) {
@@ -115,6 +117,12 @@ public class PhoneStateHandler {
         if (!blocked && showNotifications) {
             notificationService.startCallIndication(numberInfo);
         }
+    }
+
+    /** The call screening service can silence calls (Android 10+ with the role). */
+    private boolean canSilenceCalls() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                && RoleManagerHelper.hasCallScreeningRole(context);
     }
 
     public void onOffHook(Source source, String phoneNumber) {

@@ -56,7 +56,7 @@ import fr.vinetos.tranquille.ui.components.TranquilleTopBar
 /** Actions the main screen can ask the activity to perform. */
 interface MainActions {
     fun lookupNumber()
-    fun openDenylist()
+    /** Opens the settings tab (from the "blocking is off" status card). */
     fun openSettings()
     fun openAbout()
     fun blockNumber()
@@ -69,8 +69,9 @@ interface MainActions {
 }
 
 @Composable
-fun MainScreen(state: MainUiState, actions: MainActions) {
+fun MainScreen(state: MainUiState, actions: MainActions, modifier: Modifier = Modifier) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             TranquilleTopBar(
                 title = stringResource(R.string.app_name),
@@ -135,14 +136,6 @@ private fun MainMenu(actions: MainActions) {
             Icon(painterResource(R.drawable.ic_more_vert_24dp), stringResource(R.string.more_options))
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.open_denylist_activity)) },
-                onClick = { expanded = false; actions.openDenylist() },
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.open_settings_activity)) },
-                onClick = { expanded = false; actions.openSettings() },
-            )
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.open_about_activity)) },
                 onClick = { expanded = false; actions.openAbout() },

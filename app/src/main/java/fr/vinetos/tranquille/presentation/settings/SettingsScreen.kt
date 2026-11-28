@@ -55,7 +55,9 @@ fun SettingsScreen(
     environment: SettingsEnvironment,
     actions: SettingsActions,
     onNavigate: (SettingsPage) -> Unit,
-    onNavigateUp: () -> Unit,
+    /** Null on the root page where settings are a top-level destination. */
+    onNavigateUp: (() -> Unit)?,
+    modifier: Modifier = Modifier,
 ) {
     val title = stringResource(
         when (page) {
@@ -64,7 +66,7 @@ fun SettingsScreen(
             SettingsPage.DB_FILTERING -> R.string.settings_screen_db_filtering
         }
     )
-    Scaffold(topBar = { TranquilleTopBar(title, onNavigateUp = onNavigateUp) }) { padding ->
+    Scaffold(modifier = modifier, topBar = { TranquilleTopBar(title, onNavigateUp = onNavigateUp) }) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
             contentPadding = PaddingValues(bottom = 24.dp),
@@ -91,6 +93,24 @@ private fun LazyListScope.rootPage(
             stringResource(R.string.incoming_call_notifications_summary),
             state.incomingCallNotifications,
             { actions.change(IncomingCallNotifications(it)) },
+        )
+    }
+    item {
+        SwitchSetting(
+            stringResource(R.string.incoming_call_alerts),
+            stringResource(R.string.incoming_call_alerts_summary),
+            state.incomingCallAlerts,
+            { actions.change(IncomingCallAlerts(it)) },
+            enabled = state.incomingCallNotifications,
+        )
+    }
+    item {
+        SwitchSetting(
+            stringResource(R.string.incoming_call_actions),
+            stringResource(R.string.incoming_call_actions_summary),
+            state.incomingCallActions,
+            { actions.change(IncomingCallActions(it)) },
+            enabled = state.incomingCallNotifications,
         )
     }
     item {
@@ -126,6 +146,19 @@ private fun LazyListScope.rootPage(
             stringResource(R.string.block_negative_sia), stringResource(R.string.block_negative_sia_numbers_summary),
             state.blockNegativeSiaNumbers, { actions.change(BlockNegativeSiaNumbers(it)) },
         )
+    }
+    if (env.sdk >= Build.VERSION_CODES.Q) {
+        item {
+            // Silencing needs the call screening role; without it calls are rejected as before.
+            val available = state.callScreeningHeld && state.blockNegativeSiaNumbers
+            SwitchSetting(
+                stringResource(R.string.silence_rated_calls),
+                stringResource(R.string.silence_rated_calls_summary),
+                available && state.silenceRatedCalls,
+                { actions.change(SilenceRatedCalls(it)) },
+                enabled = available,
+            )
+        }
     }
     item {
         SwitchSetting(
