@@ -52,6 +52,15 @@
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
+# WorkManager (database updates) creates its Room database, its own workers and
+# input mergers by class name. Without this R8 removes WorkDatabase_Impl's
+# constructor and the app crashes on start in androidx.startup.
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
+-keep class * extends androidx.work.ListenableWorker {
+    public <init>(android.content.Context, androidx.work.WorkerParameters);
+}
+-keep class * extends androidx.work.InputMerger { <init>(); }
+
 # LibPhoneNumberInfo (the :sia module) is ours and small; keep it as is.
 -keep class dummydomain.yetanothercallblocker.sia.** { *; }
 
