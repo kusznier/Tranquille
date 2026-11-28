@@ -287,4 +287,16 @@
     <string name="about_based_on">Na podstawie</string>
     <string name="about_upstream_tranquille">Tranquille, autor: Vinetos</string>
     <string name="about_upstream_yacb">Yet Another Call Blocker, autor: xynngh</string>
+    <string name="onboarding_step_counter">Krok %1$d z %2$d</string>
+    <string name="onboarding_next">Dalej</string>
+    <string name="onboarding_finish">Zakończ</string>
+    <string name="onboarding_skip">Pomiń</string>
+    <string name="onboarding_step_done">Gotowe</string>
+    <string name="onboarding_screening_title">Blokuj, zanim zadzwoni</string>
+    <string name="onboarding_screening_text">Android pozwala jednej aplikacji filtrować połączenia przychodzące. Ustaw Tranquille jako aplikację do identyfikacji rozmówców i spamu, żeby odrzucała spam i numery z czarnej listy, zanim telefon zadzwoni.</string>
+    <string name="onboarding_screening_action">Ustaw jako aplikację do filtrowania</string>
+    <string name="onboarding_permissions_title">Uprawnienia</string>
+    <string name="onboarding_permissions_text">Dostęp do stanu telefonu i rejestru połączeń pozwala rozpoznać numer dzwoniącego i pokazać ostatnie połączenia. Powiadomienia pokazują, kto dzwoni i które połączenia zostały zablokowane. Tranquille nie wysyła nigdzie Twojego numeru ani kontaktów.</string>
+    <string name="onboarding_database_title">Baza numerów</string>
+    <string name="onboarding_database_text">Oceny numerów spamowych są przechowywane w telefonie, więc sprawdzanie dzwoniącego działa bez internetu. Bazę (około 25 MB) pobiera się z gitlab.com. Przy pobieraniu i aktualizacjach numery dzwoniących nie są nigdzie wysyłane.</string>
 </resources>

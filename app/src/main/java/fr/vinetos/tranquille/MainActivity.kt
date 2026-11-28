@@ -6,7 +6,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings as AndroidSettings
+import androidx.activity.compose.BackHandler
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +30,8 @@ import fr.vinetos.tranquille.presentation.main.AppMainRepository
 import fr.vinetos.tranquille.presentation.main.MainActions
 import fr.vinetos.tranquille.presentation.main.MainScreen
 import fr.vinetos.tranquille.presentation.main.MainViewModel
+import fr.vinetos.tranquille.presentation.onboarding.OnboardingActions
+import fr.vinetos.tranquille.presentation.onboarding.OnboardingScreen
 import fr.vinetos.tranquille.ui.components.setTranquilleContent
 import fr.vinetos.tranquille.work.TaskService
 import org.greenrobot.eventbus.Subscribe
@@ -46,7 +52,16 @@ class MainActivity : AppCompatActivity(), MainActions {
         super.onCreate(savedInstanceState)
         setTranquilleContent {
             val state by viewModel.state.collectAsStateWithLifecycle()
-            MainScreen(state = state, actions = this)
+            val onboarding = state.onboarding
+            when {
+                onboarding != null -> {
+                    BackHandler(enabled = onboarding.index > 0) { viewModel.previousOnboardingStep() }
+                    OnboardingScreen(onboarding, state.status, onboardingActions)
+                }
+                // Decided right after the first status load; avoids flashing the main screen.
+                state.onboardingPending -> Surface(Modifier.fillMaxSize()) {}
+                else -> MainScreen(state = state, actions = this)
+            }
             openedNumber?.let { info ->
                 NumberInfoDialog(info, AppNumberInfoActions(this), onDismiss = { openedNumber = null })
             }
@@ -56,8 +71,17 @@ class MainActivity : AppCompatActivity(), MainActions {
     override fun onStart() {
         super.onStart()
         EventUtils.register(this)
-        checkPermissions()
+        // On the first run the setup screen asks for permissions with an explanation instead.
+        if (settings.onboardingDone) checkPermissions()
         viewModel.refresh()
+    }
+
+    private val onboardingActions = object : OnboardingActions {
+        override fun requestCallScreening() = this@MainActivity.requestCallScreening()
+        override fun requestPermissions() = checkPermissions()
+        override fun downloadDatabase() = this@MainActivity.downloadDatabase()
+        override fun setAutoUpdates(enabled: Boolean) = viewModel.setAutoUpdates(enabled)
+        override fun next() = viewModel.nextOnboardingStep()
     }
 
     override fun onStop() {

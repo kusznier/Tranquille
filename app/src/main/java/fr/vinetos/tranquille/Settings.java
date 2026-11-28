@@ -49,6 +49,7 @@ public class Settings extends GenericSettings {
     public static final String PREF_SAVE_CRASHES_TO_EXTERNAL_STORAGE = "saveCrashesToExternalStorage";
     public static final String PREF_SAVE_LOGCAT_ON_CRASH = "saveLogcatOnCrash";
     public static final String PREF_REVIEWS_FOR_BLOCKED_CALLS = "reviewsForBlockedCalls";
+    public static final String PREF_ONBOARDING_DONE = "onboardingDone";
 
     public static final String PREF_CALL_LOG_GROUPING_NONE = "none";
     public static final String PREF_CALL_LOG_GROUPING_CONSECUTIVE = "consecutive";
@@ -403,6 +404,15 @@ public class Settings extends GenericSettings {
 
     public void setReviewsForBlockedCalls(boolean load) {
         setBoolean(PREF_REVIEWS_FOR_BLOCKED_CALLS, load);
+    }
+
+    /** The first-run setup screen was finished or skipped. */
+    public boolean getOnboardingDone() {
+        return getBoolean(PREF_ONBOARDING_DONE, false);
+    }
+
+    public void setOnboardingDone(boolean done) {
+        setBoolean(PREF_ONBOARDING_DONE, done);
     }
 
 }

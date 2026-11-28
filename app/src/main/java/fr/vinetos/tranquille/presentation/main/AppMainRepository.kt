@@ -16,6 +16,7 @@ import fr.vinetos.tranquille.data.CallLogItemGroup
 import fr.vinetos.tranquille.data.NumberInfo
 import fr.vinetos.tranquille.data.YacbHolder
 import fr.vinetos.tranquille.event.MainDbDownloadingEvent
+import fr.vinetos.tranquille.work.UpdateScheduler
 
 /** Reads the same sources the old MainActivity and call log data source used. */
 class AppMainRepository(context: Context) : MainRepository {
@@ -38,6 +39,13 @@ class AppMainRepository(context: Context) : MainRepository {
             notificationsBlocked = settings.useNotification &&
                 !NotificationManagerCompat.from(context).areNotificationsEnabled(),
             hasCallLogPermission = PermissionHelper.hasCallLogPermission(context),
+            permissionsMissing = PermissionHelper.getMissingPermissions(
+                context,
+                settings.incomingCallNotifications, settings.callBlockingEnabled,
+                settings.useContacts, settings.useNotification,
+            ).isNotEmpty(),
+            screeningRoleSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q,
+            autoUpdates = UpdateScheduler.get(context).isAutoUpdateScheduled,
         )
     }
 
@@ -59,6 +67,17 @@ class AppMainRepository(context: Context) : MainRepository {
 
     override fun setBlockByRating(block: Boolean) {
         settings.blockNegativeSiaNumbers = block
+    }
+
+    override fun isOnboardingDone() = settings.onboardingDone
+
+    override fun setOnboardingDone() {
+        settings.onboardingDone = true
+    }
+
+    override fun setAutoUpdates(enabled: Boolean) {
+        val scheduler = UpdateScheduler.get(context)
+        if (enabled) scheduler.scheduleAutoUpdates() else scheduler.cancelAutoUpdateWorker()
     }
 
     private companion object {
