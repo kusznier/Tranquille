@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [Unreleased]
+
+### Added
+
+- First-run setup in three steps: call screening role, permissions, database download (with the auto-update switch). Each step says why it is needed and can be skipped; updating from 0.1.0 skips it.
+- Bottom navigation bar for recent calls, the denylist and settings, in one activity.
+
+### Changed
+
+- Back on the denylist leaves selection mode first.
+
 ## [0.1.0] - 2026-11-27 (kusznier fork)
 
 First release of the [kusznier fork](https://github.com/kusznier/Tranquille), based on Tranquille `develop`.

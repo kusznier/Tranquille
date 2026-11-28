@@ -23,7 +23,6 @@ class MainScreenTest {
     private class RecordingActions : MainActions {
         val calls = mutableListOf<String>()
         override fun lookupNumber() { calls += "lookup" }
-        override fun openDenylist() { calls += "denylist" }
         override fun openSettings() { calls += "settings" }
         override fun openAbout() { calls += "about" }
         override fun blockNumber() { calls += "block" }

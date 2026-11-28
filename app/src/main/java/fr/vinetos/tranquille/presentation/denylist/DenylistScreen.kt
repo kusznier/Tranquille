@@ -54,7 +54,7 @@ import java.util.Date
 fun DenylistScreen(
     state: DenylistUiState,
     snackbarHostState: SnackbarHostState,
-    onNavigateUp: () -> Unit,
+    onNavigateUp: (() -> Unit)?,
     onQueryChange: (String) -> Unit,
     onBlockDenylistedChange: (Boolean) -> Unit,
     onItemClick: (DenylistItem) -> Unit,
@@ -65,8 +65,10 @@ fun DenylistScreen(
     onAdd: () -> Unit,
     onImport: () -> Unit,
     onExport: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             if (state.selectionMode) {
                 SelectionTopBar(
