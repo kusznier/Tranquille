@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings as AndroidSettings
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -26,6 +28,10 @@ import fr.vinetos.tranquille.event.DenylistItemChangedEvent
 import fr.vinetos.tranquille.event.MainDbDownloadFinishedEvent
 import fr.vinetos.tranquille.event.MainDbDownloadingEvent
 import fr.vinetos.tranquille.event.SecondaryDbUpdateFinished
+import fr.vinetos.tranquille.presentation.block.BlockCandidate
+import fr.vinetos.tranquille.presentation.block.BlockNumberDialog
+import fr.vinetos.tranquille.presentation.block.NumberBlocker
+import fr.vinetos.tranquille.presentation.block.RecentCallPicker
 import fr.vinetos.tranquille.presentation.denylist.AppDenylistRepository
 import fr.vinetos.tranquille.presentation.denylist.DenylistRoute
 import fr.vinetos.tranquille.presentation.denylist.DenylistViewModel
@@ -44,6 +50,9 @@ import fr.vinetos.tranquille.presentation.settings.SettingsController
 import fr.vinetos.tranquille.presentation.settings.SettingsViewModel
 import fr.vinetos.tranquille.ui.components.setTranquilleContent
 import fr.vinetos.tranquille.work.TaskService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -58,6 +67,10 @@ class MainActivity : AppCompatActivity(), MainActions {
 
     /** Number whose info dialog is open, if any. */
     private var openedNumber by mutableStateOf<NumberInfo?>(null)
+
+    /** "Block a number": the recent call picker is open, then the confirmation. */
+    private var pickingCallToBlock by mutableStateOf(false)
+    private var numberToBlock by mutableStateOf<BlockCandidate?>(null)
 
     private var tab by mutableStateOf(MainTab.CALLS)
 
@@ -119,6 +132,30 @@ class MainActivity : AppCompatActivity(), MainActions {
                         }
                     }
                 }
+            }
+            if (pickingCallToBlock) {
+                RecentCallPicker(
+                    rows = state.callLog,
+                    onPick = { row ->
+                        pickingCallToBlock = false
+                        numberToBlock = BlockCandidate.from(this, row.numberInfo)
+                    },
+                    onEnterManually = {
+                        pickingCallToBlock = false
+                        startActivity(EditDenylistItemActivity.getIntent(this, null, null))
+                    },
+                    onDismiss = { pickingCallToBlock = false },
+                )
+            }
+            numberToBlock?.let { candidate ->
+                BlockNumberDialog(
+                    candidate,
+                    onConfirm = { description ->
+                        numberToBlock = null
+                        block(candidate.number, description)
+                    },
+                    onDismiss = { numberToBlock = null },
+                )
             }
             openedNumber?.let { info ->
                 NumberInfoDialog(info, AppNumberInfoActions(this), onDismiss = { openedNumber = null })
@@ -222,8 +259,24 @@ class MainActivity : AppCompatActivity(), MainActions {
     }
     override fun openAbout() = startActivity(Intent(this, AboutActivity::class.java))
 
-    override fun blockNumber() =
-        startActivity(EditDenylistItemActivity.getIntent(this, null, null))
+    override fun blockNumber() {
+        // Without access to the call log there is nothing to pick from.
+        if (viewModel.state.value.status.hasCallLogPermission) {
+            pickingCallToBlock = true
+        } else {
+            startActivity(EditDenylistItemActivity.getIntent(this, null, null))
+        }
+    }
+
+    private fun block(number: String, description: String) {
+        lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                NumberBlocker(AppDenylistRepository).block(number, description)
+            }
+            Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_SHORT).show()
+            viewModel.refresh()
+        }
+    }
 
     override fun openCall(row: CallLogRow) {
         openedNumber = row.numberInfo
