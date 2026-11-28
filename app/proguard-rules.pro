@@ -34,3 +34,29 @@
 -keep class com.android.internal.telephony.ITelephony { *; }
 
 -dontobfuscate
+
+# --- Kept for R8 (release minification) -------------------------------------
+# Logging: logback-android builds its appenders, encoders and pattern converters
+# from assets/logback.xml by class name, and slf4j finds logback by ServiceLoader.
+-keep class ch.qos.logback.** { *; }
+-keep class org.slf4j.** { *; }
+-dontwarn ch.qos.logback.**
+-dontwarn org.slf4j.**
+
+# Conscrypt: native code calls back into these classes by name.
+-keep class org.conscrypt.** { *; }
+-dontwarn org.conscrypt.**
+
+# Preference classes are inflated from res/xml by name (Settings.init defaults).
+-keep public class * extends androidx.preference.Preference {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+# LibPhoneNumberInfo (the :sia module) is ours and small; keep it as is.
+-keep class dummydomain.yetanothercallblocker.sia.** { *; }
+
+# Optional platform classes referenced by OkHttp and commons-csv.
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+-dontwarn javax.annotation.**
+

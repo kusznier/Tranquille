@@ -43,7 +43,11 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.findByName("release")
-            isMinifyEnabled = false
+            // R8 removes unused code (mostly from Compose and the libraries); names stay
+            // readable (-dontobfuscate in proguard-rules.pro). Keep rules cover the code
+            // that is only reached by reflection.
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
