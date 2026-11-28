@@ -147,6 +147,19 @@ private fun LazyListScope.rootPage(
             state.blockNegativeSiaNumbers, { actions.change(BlockNegativeSiaNumbers(it)) },
         )
     }
+    if (env.sdk >= Build.VERSION_CODES.Q) {
+        item {
+            // Silencing needs the call screening role; without it calls are rejected as before.
+            val available = state.callScreeningHeld && state.blockNegativeSiaNumbers
+            SwitchSetting(
+                stringResource(R.string.silence_rated_calls),
+                stringResource(R.string.silence_rated_calls_summary),
+                available && state.silenceRatedCalls,
+                { actions.change(SilenceRatedCalls(it)) },
+                enabled = available,
+            )
+        }
+    }
     item {
         SwitchSetting(
             stringResource(R.string.block_hidden_number), stringResource(R.string.block_hidden_number_summary),

@@ -132,7 +132,13 @@ public class CallScreeningServiceImpl extends CallScreeningService {
 
             CallScreeningService.CallResponse.Builder responseBuilder = new CallResponse.Builder();
 
-            if (shouldBlock) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && shouldBlock
+                    && numberInfoService.shouldSilenceInstead(numberInfo, true)) {
+                // Rings silently; the incoming call notification offers Reject and Block.
+                LOG.info("onScreenCall() silencing call");
+                shouldBlock = false;
+                responseBuilder.setSilenceCall(true);
+            } else if (shouldBlock) {
                 responseBuilder
                         .setDisallowCall(true)
                         .setRejectCall(true)

@@ -193,6 +193,24 @@ public class NumberInfoService {
         return numberInfo.blockingReason != null;
     }
 
+    /**
+     * Whether a call that {@link #shouldBlock should be blocked} rings silently instead:
+     * only when the "silence" option is on, the call can be silenced ({@code canSilence}:
+     * Android 10+ with the call screening role) and the only reason is the negative
+     * rating. Numbers on the denylist, hidden numbers and failed verification are still
+     * rejected.
+     */
+    public boolean shouldSilenceInstead(NumberInfo numberInfo, boolean canSilence) {
+        if (!canSilence || !settings.getSilenceRatedCalls()) return false;
+        if (numberInfo.blockingReason != NumberInfo.BlockingReason.SIA_RATING) return false;
+        if (!settings.getBlockDenylisted() || denylistService == null) return true;
+        // The rating is checked first, so the denylist may not have been looked up yet.
+        DenylistItem denylistItem = numberInfo.denylistItem != null
+                ? numberInfo.denylistItem
+                : denylistService.getDenylistItemForNumber(numberInfo.number);
+        return denylistItem == null || !canBlock(NumberInfo.BlockingReason.DENYLISTED);
+    }
+
     public void blockedCall(NumberInfo numberInfo) {
         if (denylistService != null && numberInfo.denylistItem != null
                 && numberInfo.blockingReason == NumberInfo.BlockingReason.DENYLISTED) {

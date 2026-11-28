@@ -24,6 +24,7 @@ class AppSettingsStore(context: Context) : SettingsStore {
         uiMode = settings.uiMode,
         callLogGrouping = settings.callLogGrouping,
         blockNegativeSiaNumbers = settings.blockNegativeSiaNumbers,
+        silenceRatedCalls = settings.silenceRatedCalls,
         blockHiddenNumbers = settings.blockHiddenNumbers,
         blockDenylisted = settings.blockDenylisted,
         callScreeningHeld = PermissionHelper.isCallScreeningHeld(context),
@@ -61,6 +62,7 @@ class AppSettingsStore(context: Context) : SettingsStore {
             }
             is CallLogGrouping -> settings.callLogGrouping = change.value
             is BlockNegativeSiaNumbers -> settings.blockNegativeSiaNumbers = change.value
+            is SilenceRatedCalls -> settings.silenceRatedCalls = change.value
             is BlockHiddenNumbers -> settings.blockHiddenNumbers = change.value
             is BlockDenylisted -> settings.blockDenylisted = change.value
             is BlockFailedVerification -> settings.blockFailedVerificationEnabled = change.value
