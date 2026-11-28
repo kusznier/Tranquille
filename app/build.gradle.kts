@@ -16,8 +16,8 @@ android {
         applicationId = "fr.vinetos.tranquille"
         minSdk = 24
         targetSdk = 36
-        versionCode = 11
-        versionName = "0.2.0-alpha01"
+        versionCode = 12
+        versionName = "0.2.0-alpha02"
         resValue("string", "app_id", "fr.vinetos.tranquille")
 
         javaCompileOptions {
@@ -43,7 +43,11 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.findByName("release")
-            isMinifyEnabled = false
+            // R8 removes unused code (mostly from Compose and the libraries); names stay
+            // readable (-dontobfuscate in proguard-rules.pro). Keep rules cover the code
+            // that is only reached by reflection.
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

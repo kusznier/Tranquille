@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 - Back on the denylist leaves selection mode first.
+- The release APK is shrunk with R8: about 11.5 MB instead of 21 MB. Class and method names are kept, so crash reports stay readable.
 
 ## [0.1.0] - 2026-11-27 (kusznier fork)
 

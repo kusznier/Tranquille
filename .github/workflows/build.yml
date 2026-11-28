@@ -42,7 +42,8 @@ jobs:
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.1" "build-tools;36.0.0" > /dev/null
 
       - name: Build debug APK and run unit tests
-        run: ./gradlew --console=plain assembleDebug testDebugUnitTest
+        # assembleRelease runs R8 (unsigned here; no secrets needed).
+        run: ./gradlew --console=plain assembleDebug testDebugUnitTest assembleRelease
 
       - name: Upload test reports
         if: failure()
