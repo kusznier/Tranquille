@@ -300,10 +300,18 @@
     <string name="onboarding_database_title">Baza numerów</string>
     <string name="onboarding_database_text">Oceny numerów spamowych są przechowywane w telefonie, więc sprawdzanie dzwoniącego działa bez internetu. Bazę (około 25 MB) pobiera się z gitlab.com. Przy pobieraniu i aktualizacjach numery dzwoniących nie są nigdzie wysyłane.</string>
     <string name="nav_calls">Połączenia</string>
+    <string name="notification_action_reject">Odrzuć</string>
+    <string name="notification_action_block">Zablokuj</string>
     <string name="block_number_title">Zablokować ten numer?</string>
     <string name="block_number_description">Opis (opcjonalnie)</string>
     <string name="block_number_confirm">Zablokuj</string>
     <string name="block_number_added">Dodano do czarnej listy</string>
     <string name="block_number_already">Ten numer już jest na czarnej liście</string>
     <string name="block_number_invalid">Tego numeru nie da się zablokować</string>
+    <string name="incoming_call_alerts">Wyskakujące powiadomienia o nieznanych i złych</string>
+    <string name="incoming_call_alerts_summary">Powiadomienie pojawia się na górze ekranu, gdy telefon dzwoni, z kciukiem w dół na pasku stanu. Pozostałe połączenia są ciche</string>
+    <string name="incoming_call_actions">Przyciski Odrzuć i Zablokuj</string>
+    <string name="incoming_call_actions_summary">Przyciski w powiadomieniu o nieznanym lub złym połączeniu: odrzuć albo odrzuć i dodaj numer do czarnej listy</string>
+    <string name="notification_channel_name_unknown_alert">Nieznane połączenia (wyskakujące)</string>
+    <string name="notification_channel_name_negative_alert">Złe połączenia (wyskakujące)</string>
 </resources>

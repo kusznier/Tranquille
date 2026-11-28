@@ -17,6 +17,8 @@ class AppSettingsStore(context: Context) : SettingsStore {
 
     override fun load() = SettingsUiState(
         incomingCallNotifications = settings.incomingCallNotifications,
+        incomingCallAlerts = settings.incomingCallAlerts,
+        incomingCallActions = settings.incomingCallActions,
         autoUpdates = updateScheduler.isAutoUpdateScheduled,
         useContacts = settings.useContacts,
         uiMode = settings.uiMode,
@@ -48,6 +50,8 @@ class AppSettingsStore(context: Context) : SettingsStore {
     override fun write(change: SettingsChange) {
         when (change) {
             is IncomingCallNotifications -> settings.incomingCallNotifications = change.value
+            is IncomingCallAlerts -> settings.incomingCallAlerts = change.value
+            is IncomingCallActions -> settings.incomingCallActions = change.value
             is AutoUpdates ->
                 if (change.value) updateScheduler.scheduleAutoUpdates() else updateScheduler.cancelAutoUpdateWorker()
             is UseContacts -> settings.useContacts = change.value

@@ -143,6 +143,9 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".CallActionReceiver"
+            android:exported="false" />
+        <receiver
             android:name=".PhoneStateBroadcastReceiver"
             android:directBootAware="true"
             android:exported="true"

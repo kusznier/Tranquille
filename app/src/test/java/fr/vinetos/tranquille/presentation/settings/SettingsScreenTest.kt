@@ -59,6 +59,24 @@ class SettingsScreenTest {
     }
 
     @Test
+    fun callNotificationOptionsAreOnAndFollowNotifications() {
+        val (recorder, _) = show(SettingsPage.ROOT)
+        compose.onNodeWithText("Pop up for unknown and negative calls").performClick()
+        compose.onNodeWithText("Reject and Block buttons").performClick()
+        assertEquals(
+            listOf<Any>(SettingsChange.IncomingCallAlerts(false), SettingsChange.IncomingCallActions(false)),
+            recorder.calls,
+        )
+    }
+
+    @Test
+    fun callNotificationOptionsNeedNotifications() {
+        show(SettingsPage.ROOT, SettingsUiState(incomingCallNotifications = false))
+        compose.onNode(hasText("Pop up for unknown and negative calls") and isToggleable()).assertIsNotEnabled()
+        compose.onNode(hasText("Reject and Block buttons") and isToggleable()).assertIsNotEnabled()
+    }
+
+    @Test
     fun failedVerificationNeedsCallScreening() {
         show(SettingsPage.ROOT, SettingsUiState(callScreeningHeld = false))
         scrollTo("Block failed verification")
