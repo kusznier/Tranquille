@@ -299,4 +299,5 @@
     <string name="onboarding_permissions_text">Dostęp do stanu telefonu i rejestru połączeń pozwala rozpoznać numer dzwoniącego i pokazać ostatnie połączenia. Powiadomienia pokazują, kto dzwoni i które połączenia zostały zablokowane. Tranquille nie wysyła nigdzie Twojego numeru ani kontaktów.</string>
     <string name="onboarding_database_title">Baza numerów</string>
     <string name="onboarding_database_text">Oceny numerów spamowych są przechowywane w telefonie, więc sprawdzanie dzwoniącego działa bez internetu. Bazę (około 25 MB) pobiera się z gitlab.com. Przy pobieraniu i aktualizacjach numery dzwoniących nie są nigdzie wysyłane.</string>
+    <string name="nav_calls">Połączenia</string>
 </resources>

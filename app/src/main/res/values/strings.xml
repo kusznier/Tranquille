@@ -327,4 +327,5 @@
     <string name="onboarding_permissions_text">Access to phone state and the call log lets Tranquille recognise the calling number and show recent calls. Notifications show who is calling and which calls were blocked. Tranquille does not send your phone number or your contacts anywhere.</string>
     <string name="onboarding_database_title">Number database</string>
     <string name="onboarding_database_text">Ratings of spam numbers are stored on your phone, so checking a caller works offline. The database (about 25 MB) is downloaded from gitlab.com. Caller numbers are not sent anywhere for downloads or updates.</string>
+    <string name="nav_calls">Calls</string>
 </resources>
