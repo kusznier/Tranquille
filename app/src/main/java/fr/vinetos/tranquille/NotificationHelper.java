@@ -1,5 +1,6 @@
 package fr.vinetos.tranquille;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
@@ -41,6 +42,10 @@ public class NotificationHelper {
     private static final String CHANNEL_ID_NEUTRAL = "neutral_calls";
     private static final String CHANNEL_ID_UNKNOWN = "unknown_calls";
     private static final String CHANNEL_ID_NEGATIVE = "negative_calls";
+    // Pop-up (heads-up) variants, used when "Pop-up for unknown and negative calls" is on.
+    // Android does not let an app raise the importance of an existing channel.
+    private static final String CHANNEL_ID_UNKNOWN_ALERT = "unknown_calls_alert";
+    private static final String CHANNEL_ID_NEGATIVE_ALERT = "negative_calls_alert";
     private static final String CHANNEL_ID_BLOCKED_INFO = "blocked_info";
     private static final String CHANNEL_ID_MONITORING_SERVICE = "monitoring_service";
     private static final String CHANNEL_ID_TASKS = "tasks";
@@ -60,7 +65,15 @@ public class NotificationHelper {
     }
 
     public static void showIncomingCallNotification(Context context, NumberInfo numberInfo) {
-        NotificationWithInfo notificationWithInfo = createIncomingCallNotification(context, numberInfo);
+        Settings settings = App.getSettings();
+        showIncomingCallNotification(context, numberInfo,
+                settings.getIncomingCallAlerts(), settings.getIncomingCallActions());
+    }
+
+    static void showIncomingCallNotification(Context context, NumberInfo numberInfo,
+                                             boolean alerts, boolean actions) {
+        NotificationWithInfo notificationWithInfo =
+                createIncomingCallNotification(context, numberInfo, alerts, actions);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             if (CHANNEL_ID_KNOWN.equals(notificationWithInfo.channelId)) {
@@ -144,7 +157,7 @@ public class NotificationHelper {
     }
 
     private static NotificationWithInfo createIncomingCallNotification(
-            Context context, NumberInfo numberInfo) {
+            Context context, NumberInfo numberInfo, boolean alerts, boolean actions) {
         boolean unknown = false;
         String channelId;
         String title;
@@ -184,9 +197,16 @@ public class NotificationHelper {
 
         IconAndColor iconAndColor = IconAndColor.forNumberRating(
                 numberInfo.rating, numberInfo.contactItem != null);
+        boolean suspicious = CHANNEL_ID_NEGATIVE.equals(channelId) || CHANNEL_ID_UNKNOWN.equals(channelId);
+        boolean alert = suspicious && alerts;
+        if (alert) {
+            channelId = CHANNEL_ID_NEGATIVE.equals(channelId)
+                    ? CHANNEL_ID_NEGATIVE_ALERT : CHANNEL_ID_UNKNOWN_ALERT;
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(iconAndColor.iconResId)
+                // Unknown and negative callers both show a thumb down in the status bar.
+                .setSmallIcon(alert ? R.drawable.ic_thumb_down_24dp : iconAndColor.iconResId)
                 .setColor(iconAndColor.getColorInt(context))
                 .setContentTitle(title)
                 .setContentText(firstLine(text))
@@ -196,6 +216,9 @@ public class NotificationHelper {
                 .setShowWhen(false)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC); // TODO: check
 
+        if (suspicious && actions && !numberInfo.noNumber) {
+            addCallActions(context, builder, numberInfo);
+        }
         addCallNotificationIntents(context, builder, numberInfo);
 
         return new NotificationWithInfo(builder.build(), channelId);
@@ -319,6 +342,25 @@ public class NotificationHelper {
         }
     }
 
+    /** "Reject" ends the ringing call; "Block" ends it and asks to add the number to the denylist. */
+    private static void addCallActions(Context context, NotificationCompat.Builder builder,
+                                       NumberInfo numberInfo) {
+        if (canEndCalls(context)) {
+            builder.addAction(0, context.getString(R.string.notification_action_reject),
+                    CallActionReceiver.rejectIntent(context));
+        }
+        builder.addAction(0, context.getString(R.string.notification_action_block),
+                pendingActivity(context, BlockNumberActivity.getIntent(
+                        context, numberInfo.number, canEndCalls(context))));
+    }
+
+    private static boolean canEndCalls(Context context) {
+        return PermissionHelper.hasPermission(context,
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                        ? Manifest.permission.ANSWER_PHONE_CALLS
+                        : Manifest.permission.CALL_PHONE);
+    }
+
     private static PendingIntent createInfoIntent(Context context, NumberInfo numberInfo) {
         return pendingActivity(context, InfoDialogActivity.getIntent(context, numberInfo.number));
     }
@@ -391,9 +433,27 @@ public class NotificationHelper {
             channels.add(channel);
 
             channel = new NotificationChannel(
+                    CHANNEL_ID_UNKNOWN_ALERT,
+                    context.getString(R.string.notification_channel_name_unknown_alert),
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            silenceAlertChannel(channel);
+            channel.setGroup(channelGroupIncoming.getId());
+            channels.add(channel);
+
+            channel = new NotificationChannel(
                     CHANNEL_ID_NEGATIVE, context.getString(R.string.notification_channel_name_negative),
                     NotificationManager.IMPORTANCE_LOW
             );
+            channel.setGroup(channelGroupIncoming.getId());
+            channels.add(channel);
+
+            channel = new NotificationChannel(
+                    CHANNEL_ID_NEGATIVE_ALERT,
+                    context.getString(R.string.notification_channel_name_negative_alert),
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            silenceAlertChannel(channel);
             channel.setGroup(channelGroupIncoming.getId());
             channels.add(channel);
 
@@ -421,6 +481,13 @@ public class NotificationHelper {
 
             notificationManager.createNotificationChannels(channels);
         }
+    }
+
+    /** The phone is already ringing: pop up, but without a sound or vibration of our own. */
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.O)
+    private static void silenceAlertChannel(NotificationChannel channel) {
+        channel.setSound(null, null);
+        channel.enableVibration(false);
     }
 
     private static class NotificationWithInfo {

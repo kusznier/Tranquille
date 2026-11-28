@@ -91,6 +91,11 @@
             android:theme="@style/DialogBackgroundTheme"
             tools:targetApi="lollipop" />
         <activity
+            android:name=".BlockNumberActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@style/DialogBackgroundTheme" />
+        <activity
             android:name=".DummyDialerActivity"
             android:autoRemoveFromRecents="true"
             android:directBootAware="true"
@@ -137,6 +142,9 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".CallActionReceiver"
+            android:exported="false" />
         <receiver
             android:name=".PhoneStateBroadcastReceiver"
             android:directBootAware="true"

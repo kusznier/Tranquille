@@ -97,6 +97,24 @@ private fun LazyListScope.rootPage(
     }
     item {
         SwitchSetting(
+            stringResource(R.string.incoming_call_alerts),
+            stringResource(R.string.incoming_call_alerts_summary),
+            state.incomingCallAlerts,
+            { actions.change(IncomingCallAlerts(it)) },
+            enabled = state.incomingCallNotifications,
+        )
+    }
+    item {
+        SwitchSetting(
+            stringResource(R.string.incoming_call_actions),
+            stringResource(R.string.incoming_call_actions_summary),
+            state.incomingCallActions,
+            { actions.change(IncomingCallActions(it)) },
+            enabled = state.incomingCallNotifications,
+        )
+    }
+    item {
+        SwitchSetting(
             stringResource(R.string.auto_updates), stringResource(R.string.auto_updates_summary),
             state.autoUpdates, { actions.change(AutoUpdates(it)) },
         )

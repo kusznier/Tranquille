@@ -328,4 +328,18 @@
     <string name="onboarding_database_title">Number database</string>
     <string name="onboarding_database_text">Ratings of spam numbers are stored on your phone, so checking a caller works offline. The database (about 25 MB) is downloaded from gitlab.com. Caller numbers are not sent anywhere for downloads or updates.</string>
     <string name="nav_calls">Calls</string>
+    <string name="notification_action_reject">Reject</string>
+    <string name="notification_action_block">Block</string>
+    <string name="block_number_title">Block this number?</string>
+    <string name="block_number_description">Description (optional)</string>
+    <string name="block_number_confirm">Block</string>
+    <string name="block_number_added">Added to the denylist</string>
+    <string name="block_number_already">This number is already on the denylist</string>
+    <string name="block_number_invalid">This number cannot be blocked</string>
+    <string name="incoming_call_alerts">Pop up for unknown and negative calls</string>
+    <string name="incoming_call_alerts_summary">The notification appears on top of the screen while the phone rings, with a thumb down in the status bar. Other calls stay quiet</string>
+    <string name="incoming_call_actions">Reject and Block buttons</string>
+    <string name="incoming_call_actions_summary">Buttons in the notification about an unknown or negative call: reject it, or reject it and add the number to the denylist</string>
+    <string name="notification_channel_name_unknown_alert">Unknown calls (pop-up)</string>
+    <string name="notification_channel_name_negative_alert">Negative calls (pop-up)</string>
 </resources>
