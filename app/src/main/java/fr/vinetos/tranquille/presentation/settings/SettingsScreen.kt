@@ -55,7 +55,9 @@ fun SettingsScreen(
     environment: SettingsEnvironment,
     actions: SettingsActions,
     onNavigate: (SettingsPage) -> Unit,
-    onNavigateUp: () -> Unit,
+    /** Null on the root page where settings are a top-level destination. */
+    onNavigateUp: (() -> Unit)?,
+    modifier: Modifier = Modifier,
 ) {
     val title = stringResource(
         when (page) {
@@ -64,7 +66,7 @@ fun SettingsScreen(
             SettingsPage.DB_FILTERING -> R.string.settings_screen_db_filtering
         }
     )
-    Scaffold(topBar = { TranquilleTopBar(title, onNavigateUp = onNavigateUp) }) { padding ->
+    Scaffold(modifier = modifier, topBar = { TranquilleTopBar(title, onNavigateUp = onNavigateUp) }) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
             contentPadding = PaddingValues(bottom = 24.dp),
