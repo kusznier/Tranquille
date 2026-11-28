@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - First-run setup in three steps: call screening role, permissions, database download (with the auto-update switch). Each step says why it is needed and can be skipped; updating from 0.1.0 skips it.
 - Bottom navigation bar for recent calls, the denylist and settings, in one activity.
+- Optional, on by default: unknown and negative incoming calls pop up with a thumb down in the status bar, with "Reject" and "Block" buttons; "Block" asks for an optional description, pre-filled with the category.
+- "Block a number" lets you pick one of the recent calls, then confirm with an optional description.
 
 ### Changed
 
